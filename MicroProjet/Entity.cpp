@@ -7,10 +7,29 @@ Entity::Entity(b2BodyDef& bodyDef, b2FixtureDef& fixtureDef)
 
 }
 
-void Entity::update() 
+void Entity::update(sf::Time dt) 
 {
-	this->m_sfShape.setPosition(sf::Vector2f(m_body->GetPosition().x, m_body->GetPosition().y));
+	//this->m_sfShape.setPosition(sf::Vector2f(m_body->GetPosition().x, m_body->GetPosition().y));
+	m_sprite.setPosition(sf::Vector2f(m_body->GetPosition().x, m_body->GetPosition().y));
+	m_animator.update(dt);
+	m_animator.animate(m_sprite);
 }
+
+void Entity::playAnimation(std::string animation)
+{
+	m_animator.playAnimation(animation);
+}
+
+void Entity::stopAnimation()
+{
+	m_animator.stopAnimation();
+}
+
+bool Entity::isAnimationPlaying()
+{
+	return m_animator.isPlayingAnimation();
+}
+
 
 void Entity::createBody(b2World& world) 
 {
@@ -27,6 +46,22 @@ void Entity::setLinearVelocity(b2Vec2 const& impulse)
 {
 	m_body->SetLinearVelocity(impulse);
 }
+
+b2Vec2 Entity::getLinearVelocity()
+{
+	return m_body->GetLinearVelocity();
+}
+
+float32 Entity::getMass()
+{
+	return m_body->GetMass();
+}
+
+void Entity::setScale(sf::Vector2f scale)
+{
+	m_sprite.setScale(scale);
+}
+
 
 
 

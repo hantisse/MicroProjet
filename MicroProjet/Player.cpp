@@ -9,25 +9,65 @@ Player::Player()
 	m_bodyDef.position.Set(100, 0);
 	m_bodyDef.type = b2_dynamicBody;
 
-	m_bodyShape.SetAsBox(10.f/30, 10.f/30);
+	m_bodyShape.SetAsBox(5.f, 10.f);
 	 
 	m_bodyFixDef.shape = &m_bodyShape;
 	m_bodyFixDef.density = 1.0f;
 	m_bodyFixDef.friction = 0.3f;
 
 
-	m_footShape.SetAsBox(5/30, 5/30, b2Vec2(0, 5), 0);
+	m_footShape.SetAsBox(2.5, 2.5, b2Vec2(0, 10), 0);
 	m_footSensorFixDef.isSensor = true;
 	m_footSensorFixDef.shape = &m_footShape;
 		
 	
-	m_sfShape = sf::RectangleShape(sf::Vector2f(10, 10));
-	m_sfShape.setOrigin(5, 5);
-	m_sfShape.setFillColor(sf::Color::Magenta);
+	m_sourceTexture.loadFromFile("Assets/images/player/adventurer.png");
+	if (!m_sourceTexture.loadFromFile("image.png"))
+	{
+		std::cout << "Sprite could not be loaded" << std::endl;
+	}
+	m_spriteRect = sf::IntRect(0, 0, 50, 36);
 
+	m_sprite = sf::Sprite(m_sourceTexture, m_spriteRect);
+	m_sprite.setOrigin(25, 28);
+
+	loadAnimations();
 
 	m_states.push(std::make_unique<StandingPlayerState>());
 
+}
+
+void Player::loadAnimations()
+{
+	thor::FrameAnimation idle, jump, run;
+
+	idle.addFrame(1.f, sf::IntRect(0, 0, 50, 36));
+	idle.addFrame(1.f, sf::IntRect(50, 0, 50, 36));
+	idle.addFrame(1.f, sf::IntRect(100, 0, 50, 36));
+	idle.addFrame(1.f, sf::IntRect(150, 0, 50, 36));
+
+	
+	run.addFrame(1.f, sf::IntRect(50, 36, 50, 37));
+	run.addFrame(1.f, sf::IntRect(100, 36, 50, 37));
+
+	jump.addFrame(1.f, sf::IntRect(100, 73, 50, 37));
+	jump.addFrame(1.f, sf::IntRect(150, 73, 50, 37));
+	jump.addFrame(1.f, sf::IntRect(200, 73, 50, 37));
+	jump.addFrame(1.f, sf::IntRect(250, 73, 50, 37));
+	jump.addFrame(1.f, sf::IntRect(0, 110, 50, 37));
+	jump.addFrame(1.f, sf::IntRect(50, 110, 50, 37));
+
+	
+	m_animator.addAnimation("idle", idle, sf::seconds(1.f));
+	m_animator.addAnimation("jump", jump, sf::seconds(.3f));
+	m_animator.addAnimation("run", run, sf::seconds(.3f));
+
+}
+
+void Player::update(sf::Time dt) 
+{
+	Entity::update(dt);
+	m_states.top()->update(*this);
 }
 
 void Player::createBody(b2World& world)
@@ -41,7 +81,8 @@ void Player::createBody(b2World& world)
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(m_sfShape);
+	//target.draw(m_sfShape);
+	target.draw(m_sprite);
 }
 
 void Player::handleInput(sf::Event& sfEvent)
@@ -55,9 +96,9 @@ void Player::handleInput(sf::Event& sfEvent)
 
 }
 
-StatePtr Player::endState() 
+void Player::endState() 
 {
 	m_states.pop();
-	return std::move(m_states.top());
+	m_states.top()->enter(*this);
 }
 

@@ -24,7 +24,7 @@ Game::Game() :
 	m_gravity(0.0f, 2.f),
 	m_world(m_gravity),
 	m_player(std::make_unique<Player>()),
-	m_map("maps/mapTest2.tmx"),
+	m_map("Assets/maps/mapTest3.tmx"),
 	m_contactListener(m_player.get())
 {
 
@@ -52,9 +52,10 @@ void Game::run() {
 
 void Game::update() {
 	
-	updateDt();
+	sf::Time dt = m_clock.restart();
+	//updateDt();
 	m_world.Step(timeStep, velocityIterations, positionIterations);
-	m_player->update();
+	m_player->update(dt);
 	m_gameView.setCenter(m_player->getPosition());
 	m_window.setView(m_gameView);
 }
@@ -68,51 +69,20 @@ void Game::pollSFMLEvent() {
 		} 
 		else if(m_sfEvent.type == sf::Event::KeyPressed || m_sfEvent.type == sf::Event::KeyReleased)
 		{
+			std::cout << "KEY_PRESSED" << std::endl;
 			m_player->handleInput(m_sfEvent);
 		}
-		/*
 		
-		case sf::Event::KeyPressed:
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			{
-				//m_player->applyLinearImpulseToCenter(b2Vec2(5, 0), true);
-				m_player->setLinearVelocity(b2Vec2(8, 0));
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-			{
-				//m_player->applyLinearImpulseToCenter(b2Vec2(-5, 0), true);
-				m_player->setLinearVelocity(b2Vec2(-8, 0));
-
-			}
-			
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-			{
-				m_player->applyLinearImpulseToCenter(b2Vec2(0, -8), true);
-			}
-			break;
-		case sf::Event::KeyReleased:
-			if (m_sfEvent.key.code == sf::Keyboard::D)
-			{
-				m_player->setLinearVelocity(b2Vec2(0, 0));
-			}
-			else if (m_sfEvent.key.code == sf::Keyboard::Q)
-			{
-				m_player->setLinearVelocity(b2Vec2(0, 0));
-			}
-			
-			break;
-		}
-
-		*/
 	}
 }
 
 void Game::render() 
 {
 	m_window.clear();
-
 	//m_world.DrawDebugData();
+
 	m_window.draw(m_map);
+
 	m_window.draw(*m_player.get());
 
 	m_window.display();

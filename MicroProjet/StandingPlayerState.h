@@ -10,6 +10,7 @@ class StandingPlayerState : public PlayerState
 public:
 	StandingPlayerState();
 	virtual StatePtr handleInput(Player& player, sf::Event sfEvent) override;
+	virtual void update(Player& player) override;
 	void enter(Player& player);
 	
 };

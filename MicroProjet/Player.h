@@ -20,12 +20,15 @@ public:
 	int getNbFootContacts() { return m_nbFootContacts; }
 	void incrNbFootContact(int n = 1) { m_nbFootContacts += n; }
 	void handleInput(sf::Event& sfEvent);
-	StatePtr endState();
+	void update(sf::Time dt) override;
+
+	void endState();
 private:
+
+	virtual void loadAnimations() override;
+
 	int m_nbFootContacts;
 	std::stack<StatePtr> m_states;
-	//StatePtr m_state;
-
 	b2PolygonShape m_footShape;
 	b2FixtureDef m_footSensorFixDef;
 };

@@ -20,7 +20,7 @@ public:
 	virtual StatePtr handleInput(Player& player, sf::Event sfEvent) = 0;
 	virtual void update(Player& player) {};
 	virtual void enter(Player& player) = 0;
-	virtual StatePtr exit(Player& player) { return NULL; };
+	virtual void exit(Player& player);
 
 };
 

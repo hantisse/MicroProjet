@@ -30,7 +30,7 @@ void Map::update()
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	for (auto const& layer : m_tiledLayers) {
-		target.draw(*layer.get());
+		target.draw(*layer.get(), states);
 	}
 
 	/*

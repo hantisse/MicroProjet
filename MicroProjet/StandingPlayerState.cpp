@@ -10,23 +10,24 @@ StandingPlayerState::StandingPlayerState()
 
 StatePtr StandingPlayerState::handleInput(Player& player, sf::Event sfEvent)
 {
-	if (sfEvent.type == sf::Event::KeyReleased)
-	{
-		std::cout << "RELEASED" << std::endl;
-	}
-
+	
 	if (sfEvent.type == sf::Event::KeyPressed)
 	{
 		switch (sfEvent.key.code)
 		{
 		case sf::Keyboard::Z:
-			return std::make_unique<JumpingPlayerState>();
+			if (player.getNbFootContacts() > 0) {
+				std::cout << "Press jump" << std::endl;
+				return std::make_unique<JumpingPlayerState>();
+			}
 			break;
 
 		case sf::Keyboard::D:
+			player.stopAnimation();
 			return std::make_unique<RunningPlayerState>(Direction::RIGHT);
 			break;
 		case sf::Keyboard::Q:
+			player.stopAnimation();
 			return std::make_unique<RunningPlayerState>(Direction::LEFT);
 			break;
 
@@ -35,14 +36,23 @@ StatePtr StandingPlayerState::handleInput(Player& player, sf::Event sfEvent)
 		}
 	}
 
+	
+
+
 	return NULL;
 	
 }
 
+void StandingPlayerState::update(Player& player)
+{
+	if (!player.isAnimationPlaying())
+	{
+		player.playAnimation("idle");
+	}
+}
+
 void StandingPlayerState::enter(Player& player)
 {
-	std::cout << "Standing state" << std::endl;
 	player.setLinearVelocity(b2Vec2(0,0));
-	//player.setSprite(standing)
 }
 

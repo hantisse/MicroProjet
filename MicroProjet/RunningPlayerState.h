@@ -2,8 +2,6 @@
 #include "PlayerState.h"
 
 
-
-
 class RunningPlayerState : public PlayerState
 {
 public:
@@ -12,12 +10,12 @@ public:
 	virtual void update(Player& player) override;
 	void enter(Player& player);
 private:
-	Direction m_dir;
-	void updatePlayerDirection(Player& player) const;
-	void backFromJump();
+	//Direction m_dir;
+	void updatePlayerDirection(Player& player, Direction direction) const;
+	void backFromJump(Player& player);
 
-
-	bool m_hasJumped;
+	int m_timeOut;
+	bool m_hasActed;
 
 };
 

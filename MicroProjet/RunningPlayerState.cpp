@@ -3,12 +3,13 @@
 #include "RunningPlayerState.h"
 #include "JumpingPlayerState.h"
 #include "StandingPlayerState.h"
+#include "AttackingPlayerState.h"
 
 
 
 RunningPlayerState::RunningPlayerState(Direction dir) :
-	m_dir(dir),
-	m_hasJumped(false)
+	m_hasActed(false),
+	m_timeOut(0)
 {
 
 }
@@ -25,16 +26,20 @@ StatePtr RunningPlayerState::handleInput(Player& player, sf::Event sfEvent)
 		{
 		case sf::Keyboard::Z:
 			if (player.getNbFootContacts() > 0) {
-				m_hasJumped = true;;
+				m_hasActed = true;;
+				m_timeOut = 0;
 				return std::make_unique<JumpingPlayerState>();
 			}
 			break;
-
+		case sf::Keyboard::Enter:
+			m_hasActed = true;;
+			return std::make_unique<AttackingPlayerState>();
+			break;
 		case sf::Keyboard::D:
-			m_dir = Direction::RIGHT;
+			player.setDirection(Direction::RIGHT);
 			break;
 		case sf::Keyboard::Q:
-			m_dir = Direction::LEFT;
+			player.setDirection(Direction::LEFT);
 			break;
 
 		default:
@@ -46,9 +51,9 @@ StatePtr RunningPlayerState::handleInput(Player& player, sf::Event sfEvent)
 	
 	if (sfEvent.type == sf::Event::KeyReleased)
 	{
-		if(sfEvent.key.code == sf::Keyboard::D && m_dir == Direction::RIGHT)
+		if(sfEvent.key.code == sf::Keyboard::D && player.getDirection() == Direction::RIGHT)
 			exit(player);
-		else if(sfEvent.key.code == sf::Keyboard::Q && m_dir == Direction::LEFT)
+		else if(sfEvent.key.code == sf::Keyboard::Q && player.getDirection() == Direction::LEFT)
 			exit(player);
 	}
 
@@ -58,59 +63,62 @@ StatePtr RunningPlayerState::handleInput(Player& player, sf::Event sfEvent)
 
 void RunningPlayerState::update(Player& player)
 {
-
-	if (m_hasJumped)
+	
+	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)
+		&& !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 	{
-		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)
-			&& !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-		{
-			exit(player);
-			return;
-		}
-		
-		m_hasJumped = false;
+		exit(player);
+		return;
 	}
-		
 
+	
+	//++m_timeOut;
 	if (!player.isAnimationPlaying())
 	{
-		player.playAnimation("run");
+		if (player.getNbFootContacts() < 1)// && m_timeOut > 500)
+		{
+			player.playAnimation("fall");
+		} 
+		else
+		{
+			player.playAnimation("run");
+
+		}
+
 	}
 
-	updatePlayerDirection(player);
-
+	player.applyDirectionImpulse();
 
 
 }
 
 void RunningPlayerState::enter(Player& player)
 {
+	player.playAnimation("run");
 
-	if (m_hasJumped)
+	if (m_hasActed)
 	{
-		backFromJump();
-
+		backFromJump(player);
+		m_hasActed = false;
 	}
 
 }
 
-void RunningPlayerState::backFromJump()
+void RunningPlayerState::backFromJump(Player& player)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && m_dir == Direction::LEFT)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && player.getDirection() == Direction::LEFT)
 	{
-		m_dir = RIGHT;
+		player.setDirection(Direction::RIGHT);
 	} 
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) && m_dir == Direction::RIGHT)
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) && player.getDirection() == Direction::RIGHT)
 	{
-		m_dir = LEFT;
+		player.setDirection(Direction::LEFT);
 	}
 }
 
-void RunningPlayerState::updatePlayerDirection(Player& player) const
+void RunningPlayerState::updatePlayerDirection(Player& player, Direction const direction) const
 {
-	
-	player.setScale(m_dir == Direction::RIGHT ? sf::Vector2f(1, 1) : sf::Vector2f(-1, 1));
-	player.setLinearVelocity(m_dir == Direction::RIGHT ? b2Vec2(8, 0) : b2Vec2(-8, 0));
+	player.setDirection(direction);
 
 
 }

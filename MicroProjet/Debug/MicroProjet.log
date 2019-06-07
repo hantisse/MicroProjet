@@ -1,2 +1,277 @@
-﻿  Player.cpp
+﻿  AttackingMobState.cpp
+  AttackingPlayerState.cpp
+  CustomContactListener.cpp
+  DeadMobState.cpp
+  Entity.cpp
+  Game.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(156): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(157): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(215): warning C4244: 'argument': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(218): warning C4244: 'argument': conversion from 'uint32_t' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(225): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(226): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(227): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(281): warning C4244: 'return': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(460): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(461): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(462): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=unsigned int
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(463): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=unsigned int
+          ]
+  HitMobState.cpp
+  JumpingPlayerState.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\jumpingplayerstate.cpp(34): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
+  LivingEntity.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\livingentity.cpp(17): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
+  Map.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(156): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(157): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(215): warning C4244: 'argument': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(218): warning C4244: 'argument': conversion from 'uint32_t' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(225): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(226): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(227): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(281): warning C4244: 'return': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(460): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(461): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(462): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=unsigned int
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(463): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=unsigned int
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\map.cpp(14): warning C4018: '<': signed/unsigned mismatch
+  MicroProjet.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(156): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(157): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(215): warning C4244: 'argument': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(218): warning C4244: 'argument': conversion from 'uint32_t' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(225): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(226): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(227): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(281): warning C4244: 'return': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(460): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(461): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(462): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=unsigned int
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(463): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=unsigned int
+          ]
+  Mob.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\mob.cpp(34): warning C4244: 'argument': conversion from 'const _Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=double
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\mob.cpp(67): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  MobFireElemental.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\mobfireelemental.cpp(86): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  MobSlime.cpp
+  Player.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\player.cpp(87): warning C4244: 'argument': conversion from 'const _Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=double
+          ]
+  PlayerState.cpp
+  Projectile.cpp
+  RunningPlayerState.cpp
+  SleepingMobState.cpp
+  StandingPlayerState.cpp
+  Generating Code...
   MicroProjet.vcxproj -> D:\Users\Hantisse\source\repos\MicroProjet\Debug\MicroProjet.exe

@@ -11,13 +11,13 @@ public:
 	ObjectLayer(std::string const& name, tmx::Map const& map);
 	std::string getName() { return m_name; }
 	
-	//for debug
-	std::vector<sf::RectangleShape> m_shapes;
-protected:
+protected:	
 	ObjectLayer() = default;
-	std::vector<std::pair<b2BodyDef, b2PolygonShape>> m_bodyDefs;
-
 	std::string m_name;
+	tmx::ObjectGroup m_tmxLayer;
+
+	std::vector<std::pair<b2BodyDef, b2PolygonShape>> m_bodyDefs;
+	
 	
 
 };

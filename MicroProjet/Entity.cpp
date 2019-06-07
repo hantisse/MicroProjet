@@ -2,9 +2,13 @@
 #include <iostream>
 #include "Entity.h"
 
-Entity::Entity(b2BodyDef& bodyDef, b2FixtureDef& fixtureDef)
-{
 
+Entity::Entity(std::string const& texturePath)//, EntityDef const& entityDef)
+{
+	if (!m_sourceTexture.loadFromFile(texturePath))
+	{
+		std::cout << "Sprite could not be loaded" << std::endl;
+	}
 }
 
 void Entity::update(sf::Time dt) 
@@ -13,6 +17,11 @@ void Entity::update(sf::Time dt)
 	m_sprite.setPosition(sf::Vector2f(m_body->GetPosition().x, m_body->GetPosition().y));
 	m_animator.update(dt);
 	m_animator.animate(m_sprite);
+}
+
+void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(m_sprite);
 }
 
 void Entity::playAnimation(std::string animation)
@@ -57,10 +66,6 @@ float32 Entity::getMass()
 	return m_body->GetMass();
 }
 
-void Entity::setScale(sf::Vector2f scale)
-{
-	m_sprite.setScale(scale);
-}
 
 
 

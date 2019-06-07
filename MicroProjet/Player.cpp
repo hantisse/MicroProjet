@@ -1,31 +1,33 @@
 #include "pch.h"
 #include "Player.h"
+#include "Mob.h"
 #include <iostream>
 #include "StandingPlayerState.h"
 
 
-Player::Player()
+Player::Player() :
+	LivingEntity("Assets/images/player/adventurer.png")
 {
+	m_maxHealth = 50;
+	m_health = m_maxHealth;
+	m_maxVel = 5;
+	m_jumpPower = 8;
+	m_attackPower = 10;
+
 	m_bodyDef.position.Set(100, 0);
 	m_bodyDef.type = b2_dynamicBody;
 
 	m_bodyShape.SetAsBox(5.f, 10.f);
-	 
 	m_bodyFixDef.shape = &m_bodyShape;
-	m_bodyFixDef.density = 1.0f;
-	m_bodyFixDef.friction = 0.3f;
-
+	m_bodyData = { true, FixtureType::PLAYER, &m_health, this };
+	m_bodyFixDef.userData = &m_bodyData;
+	m_bodyFixDef.filter.categoryBits = FixtureType::PLAYER;
 
 	m_footShape.SetAsBox(2.5, 2.5, b2Vec2(0, 10), 0);
 	m_footSensorFixDef.isSensor = true;
 	m_footSensorFixDef.shape = &m_footShape;
-		
 	
-	m_sourceTexture.loadFromFile("Assets/images/player/adventurer.png");
-	if (!m_sourceTexture.loadFromFile("image.png"))
-	{
-		std::cout << "Sprite could not be loaded" << std::endl;
-	}
+		
 	m_spriteRect = sf::IntRect(0, 0, 50, 36);
 
 	m_sprite = sf::Sprite(m_sourceTexture, m_spriteRect);
@@ -39,7 +41,7 @@ Player::Player()
 
 void Player::loadAnimations()
 {
-	thor::FrameAnimation idle, jump, run;
+	thor::FrameAnimation idle, jump, run, fall, attack;
 
 	idle.addFrame(1.f, sf::IntRect(0, 0, 50, 36));
 	idle.addFrame(1.f, sf::IntRect(50, 0, 50, 36));
@@ -50,17 +52,30 @@ void Player::loadAnimations()
 	run.addFrame(1.f, sf::IntRect(50, 36, 50, 37));
 	run.addFrame(1.f, sf::IntRect(100, 36, 50, 37));
 
+
 	jump.addFrame(1.f, sf::IntRect(100, 73, 50, 37));
 	jump.addFrame(1.f, sf::IntRect(150, 73, 50, 37));
 	jump.addFrame(1.f, sf::IntRect(200, 73, 50, 37));
 	jump.addFrame(1.f, sf::IntRect(250, 73, 50, 37));
+	jump.addFrame(1.f, sf::IntRect(300, 73, 50, 37));
 	jump.addFrame(1.f, sf::IntRect(0, 110, 50, 37));
 	jump.addFrame(1.f, sf::IntRect(50, 110, 50, 37));
 
+
+	fall.addFrame(1.f, sf::IntRect(50, 110, 50, 37));
+
+	attack.addFrame(1.f, sf::IntRect(0, 258, 50, 37));
+	attack.addFrame(1.f, sf::IntRect(50, 258, 50, 37));
+	attack.addFrame(1.f, sf::IntRect(100, 258, 50, 37));
+	attack.addFrame(1.f, sf::IntRect(150, 258, 50, 37));
+	
+
 	
 	m_animator.addAnimation("idle", idle, sf::seconds(1.f));
-	m_animator.addAnimation("jump", jump, sf::seconds(.3f));
+	m_animator.addAnimation("jump", jump, sf::seconds(.25f));
 	m_animator.addAnimation("run", run, sf::seconds(.3f));
+	m_animator.addAnimation("fall", fall, sf::seconds(.3f));
+	m_animator.addAnimation("attack", attack, sf::seconds(.3f));
 
 }
 
@@ -68,22 +83,48 @@ void Player::update(sf::Time dt)
 {
 	Entity::update(dt);
 	m_states.top()->update(*this);
+	m_lifeBar.setPosition(m_body->GetPosition().x, m_body->GetPosition().y - 30);
+	m_life.setScale(std::max(0., static_cast<double>(m_health) / m_maxHealth), 1);
+	m_life.setPosition(m_body->GetPosition().x - m_lifeBar.getGlobalBounds().width / 2, m_body->GetPosition().y - 30);
 }
 
 void Player::createBody(b2World& world)
 {
 	Entity::createBody(world);
 	m_body->SetFixedRotation(true);
-	m_footSensorFixDef.userData = (void*)3;
-	b2Fixture* fixture = m_body->CreateFixture(&m_footSensorFixDef);
 
+	m_footData = { true, FixtureType::FOOT, &m_nbFootContacts, this };
+	m_footSensorFixDef.userData = &m_footData;
+	m_body->CreateFixture(&m_footSensorFixDef);
+
+	createSwordHitBoxes(world);
+	
 }
 
-void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Player::createSwordHitBoxes(b2World& world)
 {
-	//target.draw(m_sfShape);
-	target.draw(m_sprite);
+	b2PolygonShape shape;
+	shape.SetAsBox(6, 6, b2Vec2(-15.f, -5), 0);
+
+	b2FixtureDef fixDef;
+	fixDef.isSensor = true;
+	fixDef.shape = &shape;
+	fixDef.filter.categoryBits = FixtureType::SWORD;
+	m_swordFixLeft = m_body->CreateFixture(&fixDef);
+
+	shape.SetAsBox(6, 6, b2Vec2(15.f, -5), 0);
+	fixDef.shape = &shape;
+	m_swordFixRight = m_body->CreateFixture(&fixDef);
+
+	m_swordLeftData = { false, FixtureType::SWORD, &m_attackPower, this };
+	m_swordRightData = { false, FixtureType::SWORD, &m_attackPower, this };
+
+	m_swordFixRight->SetUserData(&m_swordRightData);
+	m_swordFixLeft->SetUserData(&m_swordLeftData);
+
 }
+
+
 
 void Player::handleInput(sf::Event& sfEvent)
 {
@@ -96,9 +137,69 @@ void Player::handleInput(sf::Event& sfEvent)
 
 }
 
+void Player::activeSword(bool active)
+{
+	if (m_direction == Direction::RIGHT)
+	{
+		m_swordLeftData.active = false;
+		m_swordRightData.active = active;
+	} 
+	else if (m_direction == Direction::LEFT)
+	{
+		m_swordLeftData.active = active;
+		m_swordRightData.active = false;
+	}
+}
+
+void Player::attack()
+{
+	for (b2ContactEdge* ce = m_body->GetContactList(); ce; ce = ce->next) 
+	{
+		b2Contact* c = ce->contact;
+
+		FixtureContactData* contactDataA = static_cast<FixtureContactData*>(c->GetFixtureA()->GetUserData());
+		FixtureContactData* contactDataB = static_cast<FixtureContactData*>(c->GetFixtureB()->GetUserData());
+		
+		if (contactDataA != nullptr)
+		{
+			computeAttack(contactDataA, contactDataB);
+		}
+
+		if (contactDataB != nullptr)
+		{
+			computeAttack(contactDataB, contactDataA);
+		}
+	}
+}
+
+
+void Player::computeAttack(FixtureContactData* contactDataA, FixtureContactData* contactDataB)
+{
+	switch (contactDataA->type)
+	{
+	case SWORD:
+
+		if (contactDataB != nullptr && contactDataA->active)
+		{
+
+			if (contactDataB->type = FixtureType::MOB)
+			{
+				*(contactDataB->data) -= *(contactDataA->data);
+				Mob* mob = static_cast<Mob*>(contactDataB->origin);
+				mob->hitByPlayer();
+				
+			}
+		}
+		break;
+	
+	default:
+		break;
+	}
+}
+
+
 void Player::endState() 
 {
 	m_states.pop();
 	m_states.top()->enter(*this);
 }
-

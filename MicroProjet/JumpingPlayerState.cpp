@@ -24,16 +24,18 @@ StatePtr JumpingPlayerState::handleInput(Player& player, sf::Event sfEvent)
 				--m_nbJumpLeft;
 
 				player.setLinearVelocity(b2Vec2(player.getLinearVelocity().x, 0));
-				float impulse = player.getMass() * -15;
+				float impulse = player.getMass() * -player.getJumpPower();
 				player.applyLinearImpulseToCenter(b2Vec2(0, impulse), true);
 				player.playAnimation("jump");
 			}
 			break;
 		case sf::Keyboard::D:
-			player.setLinearVelocity(b2Vec2(8.f, 0));
+			player.setDirection(Direction::RIGHT);
+			player.setLinearVelocity(b2Vec2(player.getMaxVel()/2, 0));
 			break;
 		case sf::Keyboard::Q:
-			player.setLinearVelocity(b2Vec2(-8.f, 0));
+			player.setDirection(Direction::LEFT);
+			player.setLinearVelocity(b2Vec2(-player.getMaxVel()/2.f, 0));
 
 			break;
 
@@ -42,6 +44,22 @@ StatePtr JumpingPlayerState::handleInput(Player& player, sf::Event sfEvent)
 		}
 		
 
+	}
+	else if (sfEvent.type == sf::Event::KeyReleased)
+	{
+		switch (sfEvent.key.code)
+		{
+		case sf::Keyboard::D:
+			player.setLinearVelocity(b2Vec2(player.getLinearVelocity().x / 2, player.getLinearVelocity().y));
+			break;
+		case sf::Keyboard::Q:
+			player.setLinearVelocity(b2Vec2(player.getLinearVelocity().x / 2, player.getLinearVelocity().y));
+
+			break;
+
+		default:
+			break;
+		}
 	}
 	
 	return NULL;	
@@ -54,6 +72,8 @@ void JumpingPlayerState::update(Player& player)
 	if (m_jumpTimeOut > 500 && player.getNbFootContacts() > 0) {
 		exit(player);
 	}
+	if (m_jumpTimeOut > 3000)
+		exit(player);
 
 
 
@@ -61,7 +81,7 @@ void JumpingPlayerState::update(Player& player)
 
 void JumpingPlayerState::enter(Player& player)
 {
-	float impulse = player.getMass() * -15;
+	float impulse = player.getMass() * -player.getJumpPower();
 	player.applyLinearImpulseToCenter(b2Vec2(0, impulse), true);
 	player.playAnimation("jump");
 }

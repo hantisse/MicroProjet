@@ -155,27 +155,47 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AttackingMobState.h" />
+    <ClInclude Include="AttackingPlayerState.h" />
     <ClInclude Include="CollisionLayer.h" />
+    <ClInclude Include="DeadMobState.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Entity.h" />
-    <ClInclude Include="GroundContactListener.h" />
+    <ClInclude Include="CustomContactListener.h" />
+    <ClInclude Include="HitMobState.h" />
     <ClInclude Include="JumpingPlayerState.h" />
+    <ClInclude Include="LivingEntity.h" />
+    <ClInclude Include="Mob.h" />
+    <ClInclude Include="MobFireElemental.h" />
+    <ClInclude Include="MobSlime.h" />
+    <ClInclude Include="MobState.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="ObjectLayer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="RunningPlayerState.h" />
     <ClInclude Include="SFMLOrthogonalLayer.hpp" />
+    <ClInclude Include="SleepingMobState.h" />
     <ClInclude Include="StandingPlayerState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AttackingMobState.cpp" />
+    <ClCompile Include="AttackingPlayerState.cpp" />
     <ClCompile Include="CollisionLayer.cpp" />
+    <ClCompile Include="DeadMobState.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="GroundContactListener.cpp" />
+    <ClCompile Include="CustomContactListener.cpp" />
+    <ClCompile Include="HitMobState.cpp" />
     <ClCompile Include="JumpingPlayerState.cpp" />
+    <ClCompile Include="LivingEntity.cpp" />
+    <ClCompile Include="Mob.cpp" />
+    <ClCompile Include="MobFireElemental.cpp" />
+    <ClCompile Include="MobSlime.cpp" />
+    <ClCompile Include="MobState.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -188,7 +208,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="RunningPlayerState.cpp" />
+    <ClCompile Include="SleepingMobState.cpp" />
     <ClCompile Include="StandingPlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>

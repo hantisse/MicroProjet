@@ -10,21 +10,13 @@
 #include "SFMLOrthogonalLayer.hpp"
 #include "CollisionLayer.h"
 #include "Map.h"
-#include "GroundContactListener.h"
-
+#include "CustomContactListener.h"
 
 int monMain();
 
+
 class Game {
 public:
-	//static thor::ResourceHolder<sf::Texture, std::string> holder;
-	//static thor::ResourceHolder<tmx::Map, std::string> mapHolder;
-	//static std::vector<std::unique_ptr<EntityDef>> entities;
-
-	Map m_map;
-
-	std::unique_ptr<Player> m_player;
-
 	Game();
 	void run();
 
@@ -33,15 +25,27 @@ private:
 	sf::View m_gameView;
 	sf::Event m_sfEvent;
 
+	Map m_map;
+	std::unique_ptr<Player> m_player;
+	std::vector<std::unique_ptr<Mob>> m_mobs;
+
+
 	b2Vec2 m_gravity; 
 	b2World m_world;
-	GroundContactListener m_contactListener;
+	CustomContactListener m_contactListener;
 
 	sf::Clock m_clock;
-	float m_dt;
 
-	void updateDt();
 	void pollSFMLEvent();
 	void update();
 	void render();
+
+	void createMobs();
+	void createMobBodies();
+	void updateMobs(sf::Time dt);
+	void renderMobs();
+
+	void removeDeadObjects();
+	void killDeadMobs();
+
 };

@@ -1,20 +1,26 @@
 #include "pch.h"
-
 #include "Map.h"
+#include <string_view>
+#include <string>
+#include "tmxlite/LayerGroup.hpp"
+
 
 
 
 Map::Map(std::string path) 
 {
-	tmx::Map map;
-	map.load(path);
+	m_tmxMap.load(path);
 
-	for (int i = 0; i < map.getLayers().size(); ++i) {
-		m_tiledLayers.push_back(std::make_unique<MapLayer>(map, i));
+	for (int i = 0; i < m_tmxMap.getLayers().size(); ++i) {
+		m_tiledLayers.push_back(std::make_unique<MapLayer>(m_tmxMap, i));
 	}
 
-	m_collisionLayer = CollisionLayer(map);
+	m_collisionLayer = CollisionLayer(m_tmxMap);
 
+}
+void Map::createBodies(b2World& world)
+{
+	createCollisionBodies(world);
 }
 
 void Map::createCollisionBodies(b2World& world)
@@ -22,10 +28,7 @@ void Map::createCollisionBodies(b2World& world)
 	m_collisionLayer.createBodies(world);
 }
 
-void Map::update() 
-{
 
-}
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -33,11 +36,5 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		target.draw(*layer.get(), states);
 	}
 
-	/*
-	for (auto shape : m_collisionLayer.m_shapes) {
-		target.draw(shape);
-	}
-	*/
-	
-
 }
+

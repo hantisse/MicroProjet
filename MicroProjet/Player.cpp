@@ -6,7 +6,7 @@
 
 
 Player::Player() :
-	LivingEntity("Assets/images/player/adventurer.png")
+	LivingEntity(EntityID::PLAYER)
 {
 	m_maxHealth = 50;
 	m_health = m_maxHealth;
@@ -17,20 +17,14 @@ Player::Player() :
 	m_bodyDef.position.Set(100, 0);
 	m_bodyDef.type = b2_dynamicBody;
 
-	m_bodyShape.SetAsBox(5.f, 10.f);
-	m_bodyFixDef.shape = &m_bodyShape;
-	m_bodyData = { true, FixtureType::PLAYER, &m_health, this };
-	m_bodyFixDef.userData = &m_bodyData;
-	m_bodyFixDef.filter.categoryBits = FixtureType::PLAYER;
+	
+	m_bodyData = { true, FIX_PLAYER, &m_health, this };
 
 	m_footShape.SetAsBox(2.5, 2.5, b2Vec2(0, 10), 0);
 	m_footSensorFixDef.isSensor = true;
 	m_footSensorFixDef.shape = &m_footShape;
 	
-		
-	m_spriteRect = sf::IntRect(0, 0, 50, 36);
-
-	m_sprite = sf::Sprite(m_sourceTexture, m_spriteRect);
+	
 	m_sprite.setOrigin(25, 28);
 
 	loadAnimations();
@@ -93,11 +87,14 @@ void Player::createBody(b2World& world)
 	Entity::createBody(world);
 	m_body->SetFixedRotation(true);
 
-	m_footData = { true, FixtureType::FOOT, &m_nbFootContacts, this };
+	m_footData = { true, FIX_FOOT, &m_nbFootContacts, this };
 	m_footSensorFixDef.userData = &m_footData;
 	m_body->CreateFixture(&m_footSensorFixDef);
 
+	
+
 	createSwordHitBoxes(world);
+
 	
 }
 
@@ -109,15 +106,15 @@ void Player::createSwordHitBoxes(b2World& world)
 	b2FixtureDef fixDef;
 	fixDef.isSensor = true;
 	fixDef.shape = &shape;
-	fixDef.filter.categoryBits = FixtureType::SWORD;
+	fixDef.filter.categoryBits = FIX_SWORD;
 	m_swordFixLeft = m_body->CreateFixture(&fixDef);
 
 	shape.SetAsBox(6, 6, b2Vec2(15.f, -5), 0);
 	fixDef.shape = &shape;
 	m_swordFixRight = m_body->CreateFixture(&fixDef);
 
-	m_swordLeftData = { false, FixtureType::SWORD, &m_attackPower, this };
-	m_swordRightData = { false, FixtureType::SWORD, &m_attackPower, this };
+	m_swordLeftData = { false, FIX_SWORD, &m_attackPower, this };
+	m_swordRightData = { false, FIX_SWORD, &m_attackPower, this };
 
 	m_swordFixRight->SetUserData(&m_swordRightData);
 	m_swordFixLeft->SetUserData(&m_swordLeftData);
@@ -177,12 +174,12 @@ void Player::computeAttack(FixtureContactData* contactDataA, FixtureContactData*
 {
 	switch (contactDataA->type)
 	{
-	case SWORD:
+	case FIX_SWORD:
 
 		if (contactDataB != nullptr && contactDataA->active)
 		{
 
-			if (contactDataB->type = FixtureType::MOB)
+			if (contactDataB->type = FIX_MOB)
 			{
 				*(contactDataB->data) -= *(contactDataA->data);
 				Mob* mob = static_cast<Mob*>(contactDataB->origin);

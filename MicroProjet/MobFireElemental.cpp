@@ -5,26 +5,17 @@
 #include "Projectile.h"
 
 MobFireElemental::MobFireElemental(tmx::Vector2f position) :
-	Mob("Assets/images/mobs/fire_elemental.png", 150, position)
+	DistanceMob(EntityID::FIRE_ELEMENTAL, 150, position)
 {
 
 	m_maxHealth = 20;
 	m_health = m_maxHealth;
 	m_attackPower = 10;
 	m_attackRate = 3000;
+	m_attackTiming = 0;
 
 	m_bodyDef.type = b2_dynamicBody;
-
-	m_bodyShape.SetAsBox(4.f, 5.f);
-
-	m_bodyFixDef.shape = &m_bodyShape;
-	m_bodyFixDef.density = 15.f;
-	m_bodyFixDef.filter.categoryBits = FixtureType::MOB;
 	
-
-	m_spriteRect = sf::IntRect(0, 0, 32, 32);
-
-	m_sprite = sf::Sprite(m_sourceTexture, m_spriteRect);
 	m_sprite.setOrigin(16, 28);
 
 	loadAnimations();
@@ -67,46 +58,13 @@ void MobFireElemental::loadAnimations()
 	m_animator.addAnimation("die", die, sf::seconds(.3f));
 }
 
-void MobFireElemental::attack()
-{
-	std::unique_ptr<Projectile> projectile = std::make_unique<Projectile>();
-	projectile->m_projectileDef.bodyDef.position.Set(m_body->GetPosition().x, m_body->GetPosition().y - 5);
-	projectile->m_body = m_body->GetWorld()->CreateBody(&projectile->m_projectileDef.bodyDef);
-
-	projectile->m_projectileDef.fixtureDef.filter.categoryBits = FixtureType::BULLET;
-	projectile->m_projectileDef.fixtureDef.filter.maskBits = ~(FixtureType::MOB | FixtureType::SWORD);
-	projectile->m_projectileDef.fixtureDef.isSensor = true;
-
-	projectile->m_projectileDef.data = { true, FixtureType::BULLET, &projectile->m_projectileDef.damage, projectile->m_body };
-	projectile->m_projectileDef.fixtureDef.userData = &projectile->m_projectileDef.data;
-
-	projectile->m_body->CreateFixture(&projectile->m_projectileDef.fixtureDef);
-	projectile->m_body->SetGravityScale(0);
-
-	float vel = m_direction == RIGHT ? 5. : -5.;
-	projectile->m_body->SetLinearVelocity(b2Vec2(vel,0));
-
-	std::cout << "Creation : " << projectile->m_body << std::endl;
-
-	m_projectiles.push_back(std::move(projectile));
-
-}
 
 void MobFireElemental::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	Mob::draw(target, states);
 	for (auto const& proj : m_projectiles)
+	{
+		//std::cout << proj->m_sprite.getLocalBounds().width << " " << proj->m_sprite.getGlobalBounds().height << std::endl;
 		proj->draw(target, states);
-}
-
-void MobFireElemental::update(sf::Time dt)
-{
-	Mob::update(dt);
-	for (auto const& proj : m_projectiles)
-		proj->update();
-}
-
-void MobFireElemental::createAttackHitBoxes(b2World& world)
-{
-	
+	}
 }

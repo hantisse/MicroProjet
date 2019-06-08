@@ -2,7 +2,7 @@
 #define PLAYERSTATE_H
 #include "Player.h"
 
-class Player;
+//class Player;
 
 class PlayerState
 {

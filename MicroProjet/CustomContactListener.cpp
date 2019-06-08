@@ -8,7 +8,6 @@ CustomContactListener::CustomContactListener()
 }
 
 void CustomContactListener::BeginContact(b2Contact* contact) {
-	//check if fixture A was the foot sensor
 	FixtureContactData* fixtureUserDataA = static_cast<FixtureContactData*>(contact->GetFixtureA()->GetUserData());
 	FixtureContactData* fixtureUserDataB = static_cast<FixtureContactData*>(contact->GetFixtureB()->GetUserData());
 
@@ -16,7 +15,6 @@ void CustomContactListener::BeginContact(b2Contact* contact) {
 	{
 		compute(fixtureUserDataA, fixtureUserDataB);
 	}
-	//check if fixture B was the foot sensor
 	
 	if (fixtureUserDataB != nullptr)
 	{
@@ -29,20 +27,18 @@ void CustomContactListener::compute(FixtureContactData* contactDataA, FixtureCon
 {
 	switch (contactDataA->type)
 	{
-	case FOOT:
+	case FIX_FOOT:
 		++(*(contactDataA->data));
 		break;
-	case BULLET:
+	case FIX_BULLET:
 		
  		if (contactDataB != nullptr)
 		{
 			
-			if (contactDataB->type == FixtureType::PLAYER)
+			if (contactDataB->type == FIX_PLAYER)
 			{
 				*(contactDataB->data) -= *(contactDataA->data);
 			}
-			
-
 
 			b2Body* body = static_cast<b2Body*>(contactDataA->origin);
 
@@ -50,17 +46,18 @@ void CustomContactListener::compute(FixtureContactData* contactDataA, FixtureCon
 			
 		}
 		break;
-	case MOB:
+	case FIX_MOB:
 		if (contactDataB != nullptr)
 		{
 
-			if (contactDataB->type == FixtureType::PLAYER)
+			if (contactDataB->type == FIX_PLAYER)
 			{
 				*(contactDataB->data) -= *(contactDataA->data)/2;
 			}
 
 		}
 		break;
+
 	default:
 		break;
 	}
@@ -69,13 +66,13 @@ void CustomContactListener::compute(FixtureContactData* contactDataA, FixtureCon
 void CustomContactListener::EndContact(b2Contact* contact) {
 	//check if fixture A was the foot sensor
 	FixtureContactData* fixtureUserData = static_cast<FixtureContactData*>(contact->GetFixtureA()->GetUserData());
-	if (fixtureUserData != nullptr && fixtureUserData->type == FixtureType::FOOT)
+	if (fixtureUserData != nullptr && fixtureUserData->type == FIX_FOOT)
 	{
 		--(*(fixtureUserData->data));
 	}
 	//check if fixture B was the foot sensor
 	fixtureUserData = static_cast<FixtureContactData*>(contact->GetFixtureB()->GetUserData());
-	if (fixtureUserData != nullptr && fixtureUserData->type == FixtureType::FOOT)
+	if (fixtureUserData != nullptr && fixtureUserData->type == FIX_FOOT)
 	{
 		--(*(fixtureUserData->data));
 	}

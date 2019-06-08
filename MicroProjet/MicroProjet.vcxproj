@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -91,15 +91,18 @@
       <PreprocessorDefinitions>SFML_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Users\Hantisse\Documents\SFML_x86\SFML-2.5.1\include;D:\Users\Hantisse\Documents\Box2D\include;D:\Users\Hantisse\Documents\thor-v2.0-msvc2015\thor-v2.0-msvc2015\include;D:\Users\Hantisse\Documents\tmxlite-master\tmxlite-master\tmxlite\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Users\Hantisse\Documents\Box2D\include;D:\Users\Hantisse\Documents\thor-v2.0-msvc2015\thor-v2.0-msvc2015\include;D:\Users\Hantisse\Documents\tmxlite-master\tmxlite-master\tmxlite\include;D:\Users\Hantisse\Documents\SFML_x86\SFML-2.5.1\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Users\Hantisse\Documents\SFML_x86\SFML-2.5.1\lib;D:\Users\Hantisse\Documents\thor-v2.0-msvc2015\thor-v2.0-msvc2015\lib;D:\Users\Hantisse\Documents\Box2D\lib;D:\Users\Hantisse\Documents\tmxlite-master\tmxlite-master\tmxlite\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Users\Hantisse\Documents\thor-v2.0-msvc2015\thor-v2.0-msvc2015\lib;D:\Users\Hantisse\Documents\Box2D\lib;D:\Users\Hantisse\Documents\tmxlite-master\tmxlite-master\tmxlite\lib;D:\Users\Hantisse\Documents\SFML_x86\SFML-2.5.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>libtmxlite-s-d.lib;Box2D.lib;thor-s-d.lib;sfml-graphics-s-d.lib;freetype.lib;sfml-window-s-d.lib 	;opengl32.lib;sfml-audio-s-d.lib 	;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-system-s-d.lib 	;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -158,10 +161,12 @@
     <ClInclude Include="AttackingMobState.h" />
     <ClInclude Include="AttackingPlayerState.h" />
     <ClInclude Include="CollisionLayer.h" />
+    <ClInclude Include="ContactMob.h" />
     <ClInclude Include="DeadMobState.h" />
-    <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="DistanceMob.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="CustomContactListener.h" />
+    <ClInclude Include="EntityModel.h" />
     <ClInclude Include="HitMobState.h" />
     <ClInclude Include="JumpingPlayerState.h" />
     <ClInclude Include="LivingEntity.h" />
@@ -185,10 +190,12 @@
     <ClCompile Include="AttackingMobState.cpp" />
     <ClCompile Include="AttackingPlayerState.cpp" />
     <ClCompile Include="CollisionLayer.cpp" />
+    <ClCompile Include="ContactMob.cpp" />
     <ClCompile Include="DeadMobState.cpp" />
-    <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="DistanceMob.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="CustomContactListener.cpp" />
+    <ClCompile Include="EntityModel.cpp" />
     <ClCompile Include="HitMobState.cpp" />
     <ClCompile Include="JumpingPlayerState.cpp" />
     <ClCompile Include="LivingEntity.cpp" />

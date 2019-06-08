@@ -1,21 +1,17 @@
 #include "pch.h"
 #include "Mob.h"
 #include <iostream>
-#include "AttackingMobState.h"
-#include "SleepingMobState.h"
-#include "DeadMobState.h"
 #include "HitMobState.h"
 
-Mob::Mob(std::string texturePath, int activationDistance, tmx::Vector2f position) :
-	LivingEntity(texturePath),
+Mob::Mob(EntityID id, int activationDistance, tmx::Vector2f position) :
+	LivingEntity(id),
 	m_attackDist(activationDistance),
 	m_distanceToPlayer(100)
 	
 {
 	m_bodyDef.position.Set(position.x, position.y);
-	m_bodyData = { true, FixtureType::MOB, &m_health, this };
-	m_bodyFixDef.userData = &m_bodyData;
-
+	m_bodyData = { true, FIX_MOB, &m_health, this };
+	
 	m_lifeBar.setFillColor(sf::Color::Red);
 	m_lifeBar.setOrigin(20, 0);
 	m_life.setFillColor(sf::Color::Green);

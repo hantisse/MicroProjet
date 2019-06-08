@@ -1,14 +1,22 @@
 #include "pch.h"
 #include <iostream>
+
 #include "Entity.h"
 
+extern std::vector<EntityModelPtr>* GameEntityModels;
 
-Entity::Entity(std::string const& texturePath)//, EntityDef const& entityDef)
+
+Entity::Entity(EntityID id) :
+	m_model((*GameEntityModels)[id])
 {
-	if (!m_sourceTexture.loadFromFile(texturePath))
-	{
-		std::cout << "Sprite could not be loaded" << std::endl;
-	}
+	m_sprite = sf::Sprite(m_model->m_sourceTexture, m_model->m_spriteRect);
+}
+
+Entity::Entity(EntityID id, b2Vec2 position) :
+	m_model((*GameEntityModels)[id])
+{
+	m_sprite = sf::Sprite(m_model->m_sourceTexture, m_model->m_spriteRect);
+	m_bodyDef.position.Set(position.x, position.y);
 }
 
 void Entity::update(sf::Time dt) 
@@ -39,11 +47,20 @@ bool Entity::isAnimationPlaying()
 	return m_animator.isPlayingAnimation();
 }
 
+void Entity::setUserData(bool active, FixtureType type, int* data)
+{
+	m_bodyData.active = active;
+	m_bodyData.type = type;
+	m_bodyData.data = data;
+	m_bodyData.origin = m_body;
+
+}
 
 void Entity::createBody(b2World& world) 
 {
 	m_body = world.CreateBody(&m_bodyDef);
-	m_body->CreateFixture(&m_bodyFixDef);
+	b2Fixture* fixture = m_body->CreateFixture(&m_model->m_bodyFixDef);
+	fixture->SetUserData(&m_bodyData);
 }
 
 void Entity::applyLinearImpulseToCenter(b2Vec2 const& impulse, bool wake) 

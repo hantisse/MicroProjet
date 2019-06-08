@@ -1,28 +1,23 @@
 #include "pch.h"
 #include "Projectile.h"
+#include <iostream>
 
 
-Projectile::Projectile()
+Projectile::Projectile(EntityID id, b2Vec2 position) :
+	Entity(id, position)
 {
-	m_projectileDef.shape.SetAsBox(1, 1, b2Vec2(0, 0), 0);
-	m_projectileDef.bodyDef.type = b2_dynamicBody;
-	m_projectileDef.bodyDef.bullet = true;
-	m_projectileDef.fixtureDef.shape = &m_projectileDef.shape;
-	m_projectileDef.fixtureDef.density = 0;
+	m_bodyDef.type = b2_dynamicBody;
+	m_bodyDef.bullet = true;
+	m_bodyDef.gravityScale = 0;
 
-	m_projectileDef.circleShape = sf::CircleShape(3);
-	m_projectileDef.circleShape.setFillColor(sf::Color::Yellow);
-
+	loadAnimations();
+	m_sprite.setOrigin(1.5f, 1.5f);
 }
 
-void Projectile::update()
+void Projectile::loadAnimations()
 {
-	m_projectileDef.circleShape.setPosition(m_body->GetPosition().x, m_body->GetPosition().y);
+	thor::FrameAnimation fire;
+	fire.addFrame(1.f, sf::IntRect(0, 32, 32, 32));
+
+	m_animator.addAnimation("fire", fire, sf::seconds(1.f));
 }
-
-void Projectile::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	target.draw(m_projectileDef.circleShape, states);
-}
-
-

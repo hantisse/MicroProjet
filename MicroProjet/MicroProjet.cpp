@@ -2,12 +2,3 @@
 //
 
 #include "pch.h"
-#include <iostream>
-#include "Game.h"
-
-int main()
-{
-
-	return monMain();
-}
-

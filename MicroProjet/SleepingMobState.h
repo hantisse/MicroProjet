@@ -1,6 +1,8 @@
 #pragma once
 #include "MobState.h"
 
+class Mob;
+
 class SleepingMobState : public MobState
 {
 public:

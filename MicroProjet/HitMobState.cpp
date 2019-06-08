@@ -33,6 +33,7 @@ void HitMobState::enter(Mob& mob)
 	int dir = mob.getDirection() == RIGHT ? -1 : 1;
 	mob.applyLinearImpulseToCenter(b2Vec2(dir * mob.getMass(), impulse), true);
 }
+
 void HitMobState::exit(Mob& mob)
 {
 }

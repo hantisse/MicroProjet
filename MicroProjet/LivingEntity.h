@@ -11,7 +11,7 @@ enum Direction
 class LivingEntity : public Entity
 {
 public:
-	LivingEntity(std::string texturePath);
+	LivingEntity(EntityID id);
 
 	int getMaxVel() { return m_maxVel; }
 	int getJumpPower() { return m_jumpPower; }
@@ -28,10 +28,11 @@ public:
 
 protected:
 	int m_maxHealth;
-	int m_health;
 	int m_maxVel;
 	int m_jumpPower;
 	int m_attackPower;
+
+	int m_health;
 
 	sf::RectangleShape m_lifeBar;
 	sf::RectangleShape m_life;

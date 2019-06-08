@@ -1,7 +1,8 @@
 #pragma once
 #include <ctime>
 #include <cstdlib>
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
+
 #include <Box2D/Box2D.h>
 #include "Thor/Resources.hpp"
 #include "tmxlite/Map.hpp"
@@ -11,14 +12,33 @@
 #include "CollisionLayer.h"
 #include "Map.h"
 #include "CustomContactListener.h"
+#include "EntityModel.h"
 
 int monMain();
 
+class EntityModel;
+typedef std::shared_ptr<EntityModel> EntityModelPtr;
 
 class Game {
 public:
 	Game();
 	void run();
+
+
+	std::vector<EntityModelPtr> EntityModels;
+	void pollSFMLEvent();
+	void update();
+	void render();
+
+	void createEntityModels();
+
+	void createMobs();
+	void createMobBodies();
+	void updateMobs(sf::Time dt);
+	void renderMobs();
+
+	void removeDeadObjects();
+	void killDeadMobs();
 
 private:
 	sf::RenderWindow m_window;
@@ -30,22 +50,13 @@ private:
 	std::vector<std::unique_ptr<Mob>> m_mobs;
 
 
+
 	b2Vec2 m_gravity; 
 	b2World m_world;
 	CustomContactListener m_contactListener;
 
 	sf::Clock m_clock;
 
-	void pollSFMLEvent();
-	void update();
-	void render();
-
-	void createMobs();
-	void createMobBodies();
-	void updateMobs(sf::Time dt);
-	void renderMobs();
-
-	void removeDeadObjects();
-	void killDeadMobs();
+	
 
 };

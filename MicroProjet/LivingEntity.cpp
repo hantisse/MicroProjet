@@ -2,8 +2,9 @@
 #include "LivingEntity.h"
 
 
-LivingEntity::LivingEntity(std::string texturePath) :
-	Entity(texturePath), m_direction(Direction::RIGHT),
+LivingEntity::LivingEntity(EntityID id) :
+	Entity(id)
+	, m_direction(Direction::RIGHT),
 	m_lifeBar(sf::RectangleShape(sf::Vector2f(40, 2))),
 	m_life(sf::RectangleShape(sf::Vector2f(40, 2)))
 {

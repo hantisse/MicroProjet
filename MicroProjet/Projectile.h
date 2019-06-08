@@ -3,26 +3,12 @@
 #include <sfml/Graphics.hpp>
 #include "Entity.h"
 
-struct ProjectileDef
-{
-	b2BodyDef bodyDef;
-	b2FixtureDef fixtureDef;
-	b2PolygonShape shape;
-	int damage;
-	int maxVelocity;
-	sf::CircleShape circleShape;
-	FixtureContactData data;
-};
-
-class Projectile : public sf::Drawable
+class Projectile : public Entity
 {
 public:
-	Projectile();
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	ProjectileDef m_projectileDef;
-	b2Body* m_body;
-	void update();
-
+	Projectile(EntityID id, b2Vec2 position);
+private:
+	void loadAnimations() override;
 		
 };
 

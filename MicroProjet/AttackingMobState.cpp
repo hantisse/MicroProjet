@@ -17,7 +17,7 @@ MobStatePtr AttackingMobState::handlePlayerPos(Mob& mob)
 		exit(mob);
 		return std::make_unique<SleepingMobState>();
 	}
-
+	
 	return NULL;
 }
 

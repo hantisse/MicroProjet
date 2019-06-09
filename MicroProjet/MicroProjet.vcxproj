@@ -158,8 +158,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ActivationLayer.h" />
     <ClInclude Include="AttackingMobState.h" />
     <ClInclude Include="AttackingPlayerState.h" />
+    <ClInclude Include="BlockingPlayerState.h" />
     <ClInclude Include="CollisionLayer.h" />
     <ClInclude Include="ContactMob.h" />
     <ClInclude Include="DeadMobState.h" />
@@ -182,13 +184,16 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="RunningPlayerState.h" />
+    <ClInclude Include="SeekingMobState.h" />
     <ClInclude Include="SFMLOrthogonalLayer.hpp" />
     <ClInclude Include="SleepingMobState.h" />
     <ClInclude Include="StandingPlayerState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActivationLayer.cpp" />
     <ClCompile Include="AttackingMobState.cpp" />
     <ClCompile Include="AttackingPlayerState.cpp" />
+    <ClCompile Include="BlockingPlayerState.cpp" />
     <ClCompile Include="CollisionLayer.cpp" />
     <ClCompile Include="ContactMob.cpp" />
     <ClCompile Include="DeadMobState.cpp" />
@@ -217,6 +222,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="RunningPlayerState.cpp" />
+    <ClCompile Include="SeekingMobState.cpp" />
     <ClCompile Include="SleepingMobState.cpp" />
     <ClCompile Include="StandingPlayerState.cpp" />
   </ItemGroup>

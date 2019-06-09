@@ -31,9 +31,20 @@ Game::Game() :
 	m_gameView(sf::Vector2f(viewHeight / 2, viewHeight / 2), sf::Vector2f(viewWidth, viewHeight)),
 	m_gravity(0.0f, 0.7f),
 	m_world(m_gravity),
-	m_map("Assets/maps/mapTest3.tmx"),
+	m_map("Assets/maps/mapTest4.tmx"),
 	m_contactListener()
 {
+
+	if (!m_font.loadFromFile("Assets/fonts/pixel_font.ttf"))
+	{
+		std::cout << "Font could not be loaded." << std::endl;
+	}
+	// Create a text
+	m_text = sf::Text("hello", m_font);
+	m_text.setCharacterSize(30);
+	m_text.setFillColor(sf::Color::Red);
+
+
 
 	createEntityModels();
 
@@ -46,6 +57,39 @@ Game::Game() :
 
 	std::cout << "world : " << &m_world << std::endl;
 }
+
+Game::Game(std::string mapPath) :
+	m_window(sf::VideoMode(800, 600), "SFML works!"),
+	m_gameView(sf::Vector2f(viewHeight / 2, viewHeight / 2), sf::Vector2f(viewWidth, viewHeight)),
+	m_gravity(0.0f, 0.7f),
+	m_world(m_gravity),
+	m_map(mapPath),
+	m_contactListener()
+{
+
+	if (!m_font.loadFromFile("Assets/fonts/pixel_font.ttf"))
+	{
+		std::cout << "Font could not be loaded." << std::endl;
+	}
+	// Create a text
+	m_text = sf::Text("hello", m_font);
+	m_text.setCharacterSize(30);
+	m_text.setFillColor(sf::Color::Red);
+
+
+
+	createEntityModels();
+
+	m_player = std::make_unique<Player>();
+
+	m_map.createBodies(m_world);
+	createMobBodies();
+	m_player->createBody(m_world);
+	m_world.SetContactListener(&m_contactListener);
+
+	std::cout << "world : " << &m_world << std::endl;
+}
+
 
 
 
@@ -72,6 +116,7 @@ void Game::update() {
 	removeDeadObjects();
 
 	m_gameView.setCenter(m_player->getPosition());
+	m_text.setPosition(m_gameView.getCenter());
 	m_window.setView(m_gameView);
 }
 
@@ -101,11 +146,14 @@ void Game::pollSFMLEvent() {
 
 void Game::render() 
 {
+
+	
 	m_window.clear();
 	m_window.draw(*m_player.get());
 	renderMobs();
 
 	m_window.draw(m_map);
+	m_window.draw(m_text);
 
 
 	m_window.display();
@@ -202,58 +250,85 @@ void Game::createEntityModels()
 {
 	EntityModels = std::vector<EntityModelPtr>(EntityID::NB_ENTITY_ID);
 
-	std::shared_ptr<EntityModel> player = std::make_shared<EntityModel>("Assets/images/player/adventurer.png");
+	std::shared_ptr<LivingEntityModel> player = std::make_shared<LivingEntityModel>("Assets/images/player/adventurer.png");
 		
-	player->m_id = EntityID::PLAYER;
-	player->m_bodyShape.SetAsBox(5.f, 10.f);
-	player->m_bodyFixDef.shape = &player->m_bodyShape;
-	player->m_bodyFixDef.filter.categoryBits = FIX_PLAYER;
-	player->m_spriteRect = sf::IntRect(0, 0, 50, 36);
+	player->id = EntityID::PLAYER;
+	player->bodyShape.SetAsBox(5.f, 10.f);
+	player->bodyFixDef.shape = &player->bodyShape;
+	player->bodyFixDef.filter.categoryBits = FIX_PLAYER;
+	player->spriteRect = sf::IntRect(0, 0, 50, 36);
+
+	player->maxHealth = 50;
+	player->maxVel = 5;
+	player->jumpPower = 8;
+	player->attackPower = 10;
 	
 	EntityModels[EntityID::PLAYER] = player;
 
-	std::shared_ptr<EntityModel> fire_elemental = std::make_shared<EntityModel>("Assets/images/mobs/fire_elemental.png");
+	std::shared_ptr<MobModel> fire_elemental = std::make_shared<MobModel>("Assets/images/mobs/fire_elemental.png");
 	
 	
-	fire_elemental->m_id = EntityID::SLIME;
-	fire_elemental->m_bodyShape.SetAsBox(4.f, 5.f);
-	fire_elemental->m_bodyFixDef.shape = &fire_elemental->m_bodyShape;
-	fire_elemental->m_bodyFixDef.density = 15.f;
-	fire_elemental->m_bodyFixDef.filter.categoryBits = FIX_MOB;
-	fire_elemental->m_spriteRect = sf::IntRect(0, 0, 32, 32);
+	fire_elemental->id = EntityID::FIRE_ELEMENTAL;
+	fire_elemental->bodyShape.SetAsBox(4.f, 5.f);
+	fire_elemental->bodyFixDef.shape = &fire_elemental->bodyShape;
+	fire_elemental->bodyFixDef.density = 15.f;
+	fire_elemental->bodyFixDef.filter.categoryBits = FIX_MOB;
+	fire_elemental->spriteRect = sf::IntRect(0, 0, 32, 32);
+
+	fire_elemental->canMove = false;
+	fire_elemental->wakeDistance = 0;
+	fire_elemental->attackDist = 200;
+	fire_elemental->maxHealth = 20;
+	fire_elemental->attackPower = 10;
+	fire_elemental->attackRate = 3000;
+	fire_elemental->attackTiming = 0;
+	fire_elemental->jumpPower = 0;
+	fire_elemental->maxVel = 0;
 	
 
 	
 	EntityModels[EntityID::FIRE_ELEMENTAL] = fire_elemental;
 
-	std::shared_ptr<EntityModel> slime = std::make_shared<EntityModel>("Assets/images/mobs/slime.png");
+	std::shared_ptr<MobModel> slime = std::make_shared<MobModel>("Assets/images/mobs/slime.png");
 
-	slime->m_id = EntityID::SLIME;
-	slime->m_bodyShape.SetAsBox(8.f, 6.f);
-	slime->m_bodyFixDef.shape = &slime->m_bodyShape;
-	slime->m_bodyFixDef.density = 15.f;
-	slime->m_bodyFixDef.filter.categoryBits = FIX_MOB;
-	slime->m_spriteRect = sf::IntRect(0, 0, 32, 32);
+	slime->id = EntityID::SLIME;
+	slime->bodyShape.SetAsBox(8.f, 6.f);
+	slime->bodyFixDef.shape = &slime->bodyShape;
+	slime->bodyFixDef.density = 15.f;
+	slime->bodyFixDef.filter.categoryBits = FIX_MOB;
+	slime->spriteRect = sf::IntRect(0, 0, 32, 32);
+
+	slime->maxHealth = 20;
+	slime->attackPower = 10;
+	slime->jumpPower = 0;
+	slime->wakeDistance = 150;
+	slime->attackDist = 20;
+	slime->attackRate = 3000;
+	slime->attackTiming = 700;
+	slime->canMove = true;
+	slime->maxVel = 1;
 	
 
 	EntityModels[EntityID::SLIME] = slime;
 
 	std::shared_ptr<EntityModel> projectile = std::make_shared<EntityModel>("Assets/images/mobs/fire_projectile.png");
 
-	projectile->m_id = EntityID::FIRE_PROJECTILE;
-	projectile->m_bodyShape.SetAsBox(3.f, 3.f);
-	projectile->m_bodyFixDef.shape = &projectile->m_bodyShape;
+	projectile->id = EntityID::FIRE_PROJECTILE;
+	projectile->bodyShape.SetAsBox(3.f, 3.f);
+	projectile->bodyFixDef.shape = &projectile->bodyShape;
 
-	projectile->m_bodyFixDef.density = 0;
-	projectile->m_bodyFixDef.filter.categoryBits = FIX_BULLET;
-	projectile->m_bodyFixDef.filter.maskBits = FIX_PLAYER | FIX_WALL;
-	projectile->m_bodyFixDef.isSensor = true;
-	projectile->m_spriteRect = sf::IntRect(0, 0, 3, 3);
+	projectile->bodyFixDef.density = 0;
+	projectile->bodyFixDef.filter.categoryBits = FIX_BULLET;
+	projectile->bodyFixDef.filter.maskBits = FIX_PLAYER | FIX_WALL | FIX_SHIELD;
+	projectile->bodyFixDef.isSensor = true;
+	projectile->spriteRect = sf::IntRect(0, 0, 3, 3);
 
 	EntityModels[EntityID::FIRE_PROJECTILE] = projectile;
 
 
 	GameEntityModels = &EntityModels;
+
+	std::cout << "Entity models created " << std::endl;
 }
 
 

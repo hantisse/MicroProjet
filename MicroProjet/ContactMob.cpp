@@ -3,9 +3,10 @@
 #include "MobState.h"
 
 
-ContactMob::ContactMob(EntityID id, int activationDistance, tmx::Vector2f position) :
-	Mob(id, activationDistance, position)
+ContactMob::ContactMob(EntityID id, tmx::Vector2f position) :
+	Mob(id, position)
 {
+	
 }
 
 
@@ -26,6 +27,23 @@ void ContactMob::activeAttackBox(bool active)
 
 void ContactMob::attack()
 {
+	/*	Pour que le bouclier bloque les attaques	
+
+	for (b2ContactEdge* ce = m_body->GetContactList(); ce; ce = ce->next)
+	{
+		b2Contact* c = ce->contact;
+
+		FixtureContactData* contactDataA = static_cast<FixtureContactData*>(c->GetFixtureA()->GetUserData());
+		FixtureContactData* contactDataB = static_cast<FixtureContactData*>(c->GetFixtureB()->GetUserData());
+
+		if ((contactDataA != nullptr && contactDataA->type == FIX_SHIELD && contactDataA->active)
+			|| (contactDataB != nullptr && contactDataB->type == FIX_SHIELD && contactDataB->active))
+		{
+			return;
+		}
+	}
+	*/
+
 	for (b2ContactEdge* ce = m_body->GetContactList(); ce; ce = ce->next)
 	{
 		b2Contact* c = ce->contact;
@@ -58,7 +76,7 @@ void ContactMob::computeAttack(FixtureContactData* contactDataA, FixtureContactD
 
 			if (contactDataB->type == FIX_PLAYER)
 			{
-				*(contactDataB->data) -= *(contactDataA->data);
+				//*(contactDataB->data) -= *(contactDataA->data);
 			}
 		}
 		break;
@@ -89,8 +107,9 @@ void ContactMob::createAttackHitBoxes(b2World& world)
 	fixDef.shape = &shape;
 	m_attackRangeLeft = m_body->CreateFixture(&fixDef);
 
-	m_attackRightData = { false, FIX_MOB_ATTACK, &m_attackPower, this };
-	m_attackLeftData = { false, FIX_MOB_ATTACK, &m_attackPower, this };
+	int attackPower = getModel()->attackPower;
+	m_attackRightData = { false, FIX_MOB_ATTACK, attackPower, this };
+	m_attackLeftData = { false, FIX_MOB_ATTACK, attackPower, this };
 
 	m_attackRangeRight->SetUserData(&m_attackRightData);
 	m_attackRangeLeft->SetUserData(&m_attackLeftData);

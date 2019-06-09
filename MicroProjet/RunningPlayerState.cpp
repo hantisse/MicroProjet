@@ -4,12 +4,12 @@
 #include "JumpingPlayerState.h"
 #include "StandingPlayerState.h"
 #include "AttackingPlayerState.h"
+#include "BlockingPlayerState.h"
 
 
 
 RunningPlayerState::RunningPlayerState(Direction dir) :
-	m_hasActed(false),
-	m_timeOut(0)
+	m_hasActed(false)
 {
 
 }
@@ -25,15 +25,18 @@ StatePtr RunningPlayerState::handleInput(Player& player, sf::Event sfEvent)
 		switch (sfEvent.key.code)
 		{
 		case sf::Keyboard::Z:
-			if (player.getNbFootContacts() > 0) {
+			if ((player.getActivationFlags() & ACTIV_JUMP) == ACTIV_JUMP
+				&& player.getNbFootContacts() > 0) {
 				m_hasActed = true;;
-				m_timeOut = 0;
 				return std::make_unique<JumpingPlayerState>();
 			}
 			break;
 		case sf::Keyboard::Enter:
-			m_hasActed = true;;
-			return std::make_unique<AttackingPlayerState>();
+			if ((player.getActivationFlags() & ACTIV_ATTACK) == ACTIV_ATTACK)
+			{
+				m_hasActed = true;;
+				return std::make_unique<AttackingPlayerState>();
+			}
 			break;
 		case sf::Keyboard::D:
 			player.setDirection(Direction::RIGHT);
@@ -41,7 +44,13 @@ StatePtr RunningPlayerState::handleInput(Player& player, sf::Event sfEvent)
 		case sf::Keyboard::Q:
 			player.setDirection(Direction::LEFT);
 			break;
-
+		case sf::Keyboard::P:
+			if ((player.getActivationFlags() & ACTIV_SHIELD) == ACTIV_SHIELD)
+			{
+				m_hasActed = true;
+				return std::make_unique<BlockingPlayerState>();
+			}
+			break;
 		default:
 			break;
 		}
@@ -72,10 +81,9 @@ void RunningPlayerState::update(Player& player)
 	}
 
 	
-	//++m_timeOut;
 	if (!player.isAnimationPlaying())
 	{
-		if (player.getNbFootContacts() < 1)// && m_timeOut > 500)
+		if (player.getNbFootContacts() < 1)
 		{
 			player.playAnimation("fall");
 		} 

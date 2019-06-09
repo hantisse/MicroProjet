@@ -22,6 +22,7 @@ typedef std::shared_ptr<EntityModel> EntityModelPtr;
 class Game {
 public:
 	Game();
+	Game(std::string mapPath);
 	void run();
 
 
@@ -40,16 +41,16 @@ public:
 	void removeDeadObjects();
 	void killDeadMobs();
 
-private:
+//private:
 	sf::RenderWindow m_window;
 	sf::View m_gameView;
 	sf::Event m_sfEvent;
+	sf::Text m_text;
+	sf::Font m_font;
 
 	Map m_map;
 	std::unique_ptr<Player> m_player;
 	std::vector<std::unique_ptr<Mob>> m_mobs;
-
-
 
 	b2Vec2 m_gravity; 
 	b2World m_world;

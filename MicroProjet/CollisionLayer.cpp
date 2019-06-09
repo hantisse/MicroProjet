@@ -9,8 +9,7 @@ using namespace std::literals::string_view_literals;
 CollisionLayer::CollisionLayer(tmx::Map const& map) :
 	ObjectLayer("COLLISION", map)
 {
-	
-	m_name = "COLLISION";
+
 
 	auto const& objects = m_tmxLayer.getObjects();
 	for (auto const& object : objects) {
@@ -23,6 +22,7 @@ CollisionLayer::CollisionLayer(tmx::Map const& map) :
 
 		m_bodyDefs.push_back(std::make_pair(bodyDef, box));
 
+		m_contactDatas.push_back({ true, FIX_WALL, 0, nullptr });
 
 	}
 		
@@ -33,13 +33,12 @@ void CollisionLayer::createBodies(b2World& world)
 	for (auto const& pair : m_bodyDefs)
 	{
 		b2Body* body = world.CreateBody(&(pair.first));
+
 		b2FixtureDef fixDef;
 		fixDef.filter.categoryBits = FIX_WALL;
 		fixDef.shape = &(pair.second);
-		//b2Fixture* fixture = body->CreateFixture(&(pair.second), 0.0f);
+		fixDef.userData = &m_contactDatas[0];
 		b2Fixture* fixture = body->CreateFixture(&fixDef);
-		//b2Filter filter;
-		//filter.categoryBits = FIX_WALL;
-		//fixture->SetFilterData(filter);
+
 	}
 }

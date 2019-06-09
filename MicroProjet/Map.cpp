@@ -4,6 +4,10 @@
 #include <string>
 #include "tmxlite/LayerGroup.hpp"
 
+#include <string_view>
+using namespace std::literals::string_view_literals;
+
+
 
 
 
@@ -16,16 +20,25 @@ Map::Map(std::string path)
 	}
 
 	m_collisionLayer = CollisionLayer(m_tmxMap);
+	m_activationLayer = ActivationLayer(m_tmxMap);
 
 }
 void Map::createBodies(b2World& world)
 {
 	createCollisionBodies(world);
+	createActivationBodies(world);
+	
 }
 
 void Map::createCollisionBodies(b2World& world)
 {
 	m_collisionLayer.createBodies(world);
+}
+
+void Map::createActivationBodies(b2World& world)
+{
+	m_activationLayer.createBodies(world);
+
 }
 
 

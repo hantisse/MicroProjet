@@ -15,6 +15,8 @@ enum FixtureType {
 	FIX_BULLET = 0x0010,
 	FIX_MOB_ATTACK = 0x0020,
 	FIX_WALL = 0x0040,
+	FIX_SHIELD = 0x0080,
+	FIX_ACTIVATION = 0x0100,
 };
 
 
@@ -22,7 +24,7 @@ struct FixtureContactData
 {
 	bool active;
 	FixtureType type;
-	int* data;
+	int data;
 	void* origin;
 
 };
@@ -57,6 +59,7 @@ public:
 	bool isAnimationPlaying();
 
 	virtual void createBody(b2World& world);
+	b2Body* getBody() { return m_body; }
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	virtual void applyLinearImpulseToCenter(b2Vec2 const& impulse, bool wake);
 	void setLinearVelocity(b2Vec2 const& impulse);

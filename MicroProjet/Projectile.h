@@ -6,9 +6,13 @@
 class Projectile : public Entity
 {
 public:
-	Projectile(EntityID id, b2Vec2 position);
+	Projectile(EntityID id, b2Vec2 position, int power);
+	void destroy();
+	bool destroyed();
 private:
 	void loadAnimations() override;
+
+	bool m_destroyed;
 		
 };
 

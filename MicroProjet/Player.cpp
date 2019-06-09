@@ -8,17 +8,20 @@
 Player::Player() :
 	LivingEntity(EntityID::PLAYER)
 {
+
+	m_activationFlags = 0x0000;
+	/*
 	m_maxHealth = 50;
 	m_health = m_maxHealth;
 	m_maxVel = 5;
 	m_jumpPower = 8;
 	m_attackPower = 10;
-
+	*/
 	m_bodyDef.position.Set(100, 0);
 	m_bodyDef.type = b2_dynamicBody;
 
 	
-	m_bodyData = { true, FIX_PLAYER, &m_health, this };
+	m_bodyData = { true, FIX_PLAYER, getModel()->attackPower, this };
 
 	m_footShape.SetAsBox(2.5, 2.5, b2Vec2(0, 10), 0);
 	m_footSensorFixDef.isSensor = true;
@@ -35,7 +38,7 @@ Player::Player() :
 
 void Player::loadAnimations()
 {
-	thor::FrameAnimation idle, jump, run, fall, attack;
+	thor::FrameAnimation idle, jump, run, fall, attack, block;
 
 	idle.addFrame(1.f, sf::IntRect(0, 0, 50, 36));
 	idle.addFrame(1.f, sf::IntRect(50, 0, 50, 36));
@@ -63,13 +66,16 @@ void Player::loadAnimations()
 	attack.addFrame(1.f, sf::IntRect(100, 258, 50, 37));
 	attack.addFrame(1.f, sf::IntRect(150, 258, 50, 37));
 	
-
+	block.addFrame(1.f, sf::IntRect(200, 221, 50, 37));
+	block.addFrame(1.f, sf::IntRect(150, 221, 50, 37));
+	block.addFrame(1.f, sf::IntRect(100, 221, 50, 37));
 	
 	m_animator.addAnimation("idle", idle, sf::seconds(1.f));
 	m_animator.addAnimation("jump", jump, sf::seconds(.25f));
 	m_animator.addAnimation("run", run, sf::seconds(.3f));
 	m_animator.addAnimation("fall", fall, sf::seconds(.3f));
 	m_animator.addAnimation("attack", attack, sf::seconds(.3f));
+	m_animator.addAnimation("block", block, sf::seconds(.1f));
 
 }
 
@@ -78,7 +84,7 @@ void Player::update(sf::Time dt)
 	Entity::update(dt);
 	m_states.top()->update(*this);
 	m_lifeBar.setPosition(m_body->GetPosition().x, m_body->GetPosition().y - 30);
-	m_life.setScale(std::max(0., static_cast<double>(m_health) / m_maxHealth), 1);
+	m_life.setScale(std::max(0., static_cast<double>(m_health) / getModel()->maxHealth), 1);
 	m_life.setPosition(m_body->GetPosition().x - m_lifeBar.getGlobalBounds().width / 2, m_body->GetPosition().y - 30);
 }
 
@@ -87,24 +93,25 @@ void Player::createBody(b2World& world)
 	Entity::createBody(world);
 	m_body->SetFixedRotation(true);
 
-	m_footData = { true, FIX_FOOT, &m_nbFootContacts, this };
+	m_footData = { true, FIX_FOOT, m_nbFootContacts, this };
 	m_footSensorFixDef.userData = &m_footData;
 	m_body->CreateFixture(&m_footSensorFixDef);
 
 	
 
-	createSwordHitBoxes(world);
+	createWeaponHitBoxes(world);
 
 	
 }
 
-void Player::createSwordHitBoxes(b2World& world)
+void Player::createWeaponHitBoxes(b2World& world)
 {
 	b2PolygonShape shape;
 	shape.SetAsBox(6, 6, b2Vec2(-15.f, -5), 0);
 
 	b2FixtureDef fixDef;
 	fixDef.isSensor = true;
+
 	fixDef.shape = &shape;
 	fixDef.filter.categoryBits = FIX_SWORD;
 	m_swordFixLeft = m_body->CreateFixture(&fixDef);
@@ -113,11 +120,29 @@ void Player::createSwordHitBoxes(b2World& world)
 	fixDef.shape = &shape;
 	m_swordFixRight = m_body->CreateFixture(&fixDef);
 
-	m_swordLeftData = { false, FIX_SWORD, &m_attackPower, this };
-	m_swordRightData = { false, FIX_SWORD, &m_attackPower, this };
+	int attackPower = getModel()->attackPower;
+	m_swordLeftData = { false, FIX_SWORD, attackPower, this };
+	m_swordRightData = { false, FIX_SWORD, attackPower, this };
 
 	m_swordFixRight->SetUserData(&m_swordRightData);
 	m_swordFixLeft->SetUserData(&m_swordLeftData);
+
+	fixDef.filter.categoryBits = FIX_SHIELD;
+
+	shape.SetAsBox(6, 8, b2Vec2(-15.f, -5), 0);
+	fixDef.shape = &shape;
+	m_shieldFixLeft = m_body->CreateFixture(&fixDef);
+
+	shape.SetAsBox(6, 8, b2Vec2(15.f, -5), 0);
+	fixDef.shape = &shape;
+	m_shieldFixRight = m_body->CreateFixture(&fixDef);
+
+	m_shieldLeftData = { false, FIX_SHIELD, 0, this };
+	m_shieldRightData = { false, FIX_SHIELD, 0, this };
+
+	m_shieldFixRight->SetUserData(&m_shieldRightData);
+	m_shieldFixLeft->SetUserData(&m_shieldLeftData);
+
 
 }
 
@@ -145,6 +170,21 @@ void Player::activeSword(bool active)
 	{
 		m_swordLeftData.active = active;
 		m_swordRightData.active = false;
+	}
+}
+
+
+void Player::activeShield(bool active)
+{
+	if (m_direction == Direction::RIGHT)
+	{
+		m_shieldLeftData.active = false;
+		m_shieldRightData.active = active;
+	}
+	else if (m_direction == Direction::LEFT)
+	{
+		m_shieldLeftData.active = active;
+		m_shieldRightData.active = false;
 	}
 }
 
@@ -179,11 +219,12 @@ void Player::computeAttack(FixtureContactData* contactDataA, FixtureContactData*
 		if (contactDataB != nullptr && contactDataA->active)
 		{
 
-			if (contactDataB->type = FIX_MOB)
+			if (contactDataB->type == FIX_MOB)
 			{
-				*(contactDataB->data) -= *(contactDataA->data);
+
+				
 				Mob* mob = static_cast<Mob*>(contactDataB->origin);
-				mob->hitByPlayer();
+				mob->hitByPlayer(getModel()->attackPower);
 				
 			}
 		}
@@ -194,6 +235,15 @@ void Player::computeAttack(FixtureContactData* contactDataA, FixtureContactData*
 	}
 }
 
+void Player::addActivation(unsigned short const flag)
+{
+	m_activationFlags |= flag;
+}
+
+unsigned short Player::getActivationFlags()
+{
+	return m_activationFlags;
+}
 
 void Player::endState() 
 {

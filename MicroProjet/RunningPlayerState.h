@@ -13,8 +13,6 @@ private:
 	//Direction m_dir;
 	void updatePlayerDirection(Player& player, Direction direction) const;
 	void backFromJump(Player& player);
-
-	int m_timeOut;
 	bool m_hasActed;
 
 };

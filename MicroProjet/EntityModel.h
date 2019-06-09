@@ -12,17 +12,46 @@ enum EntityID
 	NB_ENTITY_ID
 };
 
-class EntityModel
+enum ModelType
+{
+	MOD_ENTITY,
+	MOD_LIV,
+	MOD_MOB,
+};
+
+struct EntityModel
 {
 public:
-	EntityModel() = default;
+	//EntityModel() = default;
 	EntityModel(std::string const& texturePath);
 	
-	EntityID m_id;
+	EntityID id;
+	ModelType type;
 
-	b2PolygonShape m_bodyShape;
-	b2FixtureDef m_bodyFixDef;
-	sf::IntRect m_spriteRect;
-	sf::Texture m_sourceTexture;
+	b2PolygonShape bodyShape;
+	b2FixtureDef bodyFixDef;
+	sf::IntRect spriteRect;
+	sf::Texture sourceTexture;
+};
+
+struct LivingEntityModel : EntityModel
+{
+	LivingEntityModel(std::string const& texturePath);
+
+	int maxHealth;
+	int maxVel;
+	int jumpPower;
+	int attackPower;
+};
+
+struct MobModel : LivingEntityModel
+{
+	MobModel(std::string const& texturePath);
+
+	int attackDist;
+	int wakeDistance;
+	int attackRate;
+	int attackTiming;
+	bool canMove;
 };
 

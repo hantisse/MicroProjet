@@ -6,15 +6,17 @@
 
 
 MobSlime::MobSlime(tmx::Vector2f position) :
-	ContactMob(EntityID::SLIME, 40, position)
+	ContactMob(EntityID::SLIME, position)
 {
-
+	/*
+	m_wakeDistance = 150;
 	m_maxHealth = 20;
-	m_health = m_maxHealth;
+
 	m_attackPower = 10;
 	m_attackRate = 3000;
 	m_attackTiming = 700;
-
+	m_maxVel = 1;
+	*/
 	m_bodyDef.type = b2_dynamicBody;
 	
 	m_sprite.setOrigin(16, 20);

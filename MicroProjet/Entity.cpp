@@ -9,13 +9,13 @@ extern std::vector<EntityModelPtr>* GameEntityModels;
 Entity::Entity(EntityID id) :
 	m_model((*GameEntityModels)[id])
 {
-	m_sprite = sf::Sprite(m_model->m_sourceTexture, m_model->m_spriteRect);
+	m_sprite = sf::Sprite(m_model->sourceTexture, m_model->spriteRect);
 }
 
 Entity::Entity(EntityID id, b2Vec2 position) :
 	m_model((*GameEntityModels)[id])
 {
-	m_sprite = sf::Sprite(m_model->m_sourceTexture, m_model->m_spriteRect);
+	m_sprite = sf::Sprite(m_model->sourceTexture, m_model->spriteRect);
 	m_bodyDef.position.Set(position.x, position.y);
 }
 
@@ -47,19 +47,11 @@ bool Entity::isAnimationPlaying()
 	return m_animator.isPlayingAnimation();
 }
 
-void Entity::setUserData(bool active, FixtureType type, int* data)
-{
-	m_bodyData.active = active;
-	m_bodyData.type = type;
-	m_bodyData.data = data;
-	m_bodyData.origin = m_body;
-
-}
 
 void Entity::createBody(b2World& world) 
 {
 	m_body = world.CreateBody(&m_bodyDef);
-	b2Fixture* fixture = m_body->CreateFixture(&m_model->m_bodyFixDef);
+	b2Fixture* fixture = m_body->CreateFixture(&m_model->bodyFixDef);
 	fixture->SetUserData(&m_bodyData);
 }
 

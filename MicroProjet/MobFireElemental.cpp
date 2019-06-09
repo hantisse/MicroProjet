@@ -5,15 +5,10 @@
 #include "Projectile.h"
 
 MobFireElemental::MobFireElemental(tmx::Vector2f position) :
-	DistanceMob(EntityID::FIRE_ELEMENTAL, 150, position)
+	DistanceMob(EntityID::FIRE_ELEMENTAL, position)
 {
 
-	m_maxHealth = 20;
-	m_health = m_maxHealth;
-	m_attackPower = 10;
-	m_attackRate = 3000;
-	m_attackTiming = 0;
-
+	m_health = getModel()->maxHealth;
 	m_bodyDef.type = b2_dynamicBody;
 	
 	m_sprite.setOrigin(16, 28);

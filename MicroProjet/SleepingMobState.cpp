@@ -2,7 +2,7 @@
 #include <iostream>
 #include "SleepingMobState.h"
 #include "AttackingMobState.h"
-#include "DeadMobState.h"
+#include "SeekingMobState.h"
 
 
 SleepingMobState::SleepingMobState()
@@ -15,6 +15,10 @@ MobStatePtr SleepingMobState::handlePlayerPos(Mob& mob)
 	if (mob.canAttack())
 	{
 		return std::make_unique<AttackingMobState>();
+	}
+	if (mob.awake())
+	{
+		return std::make_unique<SeekingMobState>();
 	}
 
 	return NULL;

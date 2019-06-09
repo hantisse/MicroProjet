@@ -8,6 +8,8 @@ LivingEntity::LivingEntity(EntityID id) :
 	m_lifeBar(sf::RectangleShape(sf::Vector2f(40, 2))),
 	m_life(sf::RectangleShape(sf::Vector2f(40, 2)))
 {
+	m_health = getModel()->maxHealth;
+
 	m_lifeBar.setFillColor(sf::Color::Red);
 	m_lifeBar.setOrigin(20, 0);
 	m_life.setFillColor(sf::Color::Green);
@@ -15,7 +17,8 @@ LivingEntity::LivingEntity(EntityID id) :
 
 void LivingEntity::applyDirectionImpulse()
 {
-	setLinearVelocity(m_direction == Direction::RIGHT ? b2Vec2(m_maxVel, getLinearVelocity().y) : b2Vec2(-m_maxVel, getLinearVelocity().y));
+	int maxVel = getModel()->maxVel;
+	setLinearVelocity(m_direction == Direction::RIGHT ? b2Vec2(maxVel, getLinearVelocity().y) : b2Vec2(-maxVel, getLinearVelocity().y));
 
 }
 
@@ -43,3 +46,17 @@ void LivingEntity::setDirection(Direction const direction)
 	}
 }
 
+int LivingEntity::getMaxVel()
+{ 
+	return getModel()->maxVel; 
+}
+int LivingEntity::getJumpPower() 
+{ 
+	return getModel()->jumpPower; 
+}
+
+LivingEntityModel* LivingEntity::getModel()
+{
+	assert(m_model->type == MOD_LIV || m_model->type == MOD_MOB);
+	return static_cast<LivingEntityModel*>(m_model.get());
+}

@@ -4,7 +4,7 @@
 class ContactMob : public Mob
 {
 public:
-	ContactMob(EntityID id, int activationDistance, tmx::Vector2f position);
+	ContactMob(EntityID id, tmx::Vector2f position);
 	~ContactMob();
 
 	virtual void attack() override;

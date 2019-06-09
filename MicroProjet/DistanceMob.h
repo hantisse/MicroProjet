@@ -5,7 +5,7 @@
 class DistanceMob : public Mob
 {
 public:
-	DistanceMob(EntityID id, int activationDistance, tmx::Vector2f position);
+	DistanceMob(EntityID id, tmx::Vector2f position);
 	virtual void attack() override;
 	virtual ~DistanceMob();
 

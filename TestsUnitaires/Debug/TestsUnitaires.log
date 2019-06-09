@@ -1,0 +1,85 @@
+﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  test.cpp
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(156): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(157): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(215): warning C4244: 'argument': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(218): warning C4244: 'argument': conversion from 'uint32_t' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(225): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(226): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(227): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(281): warning C4244: 'return': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(460): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(461): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(462): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=unsigned int
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(463): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=unsigned int
+          ]
+d:\users\hantisse\source\repos\microprojet\microprojet\game.h(19): warning C4099: 'EntityModel': type name first seen using 'struct' now seen using 'class'
+  d:\users\hantisse\source\repos\microprojet\microprojet\entitymodel.h(22): note: see declaration of 'EntityModel'
+  TestsUnitaires.vcxproj -> D:\Users\Hantisse\source\repos\MicroProjet\Debug\TestsUnitaires.exe

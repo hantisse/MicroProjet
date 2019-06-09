@@ -4,12 +4,15 @@
 #include <tmxlite/Map.hpp>
 #include <tmxlite/Config.hpp>
 #include "SFML/Graphics.hpp"
+#include "Entity.h"
 
 class ObjectLayer
 {
 public:
 	ObjectLayer(std::string const& name, tmx::Map const& map);
 	std::string getName() { return m_name; }
+	virtual void createBodies(b2World& world) = 0;
+
 	
 protected:	
 	ObjectLayer() = default;
@@ -17,8 +20,6 @@ protected:
 	tmx::ObjectGroup m_tmxLayer;
 
 	std::vector<std::pair<b2BodyDef, b2PolygonShape>> m_bodyDefs;
-	
-	
-
+	std::vector<FixtureContactData> m_contactDatas;
 };
 

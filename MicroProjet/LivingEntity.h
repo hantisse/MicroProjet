@@ -13,9 +13,10 @@ class LivingEntity : public Entity
 public:
 	LivingEntity(EntityID id);
 
-	int getMaxVel() { return m_maxVel; }
-	int getJumpPower() { return m_jumpPower; }
+	int getMaxVel(); 
+	int getJumpPower(); 
 	Direction getDirection() { return m_direction; }
+	LivingEntityModel* getModel();
 	void applyDirectionImpulse();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	
@@ -27,11 +28,12 @@ public:
 	virtual void jump() {};
 
 protected:
+	/*
 	int m_maxHealth;
 	int m_maxVel;
 	int m_jumpPower;
 	int m_attackPower;
-
+	*/
 	int m_health;
 
 	sf::RectangleShape m_lifeBar;

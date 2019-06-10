@@ -46,9 +46,14 @@ void Mob::handlePlayerPos()
 	}
 }
 
+b2Body* Mob::getBody() const
+{
+	return m_body; 
+}
 
 
-void Mob::hitByPlayer(int damage)
+
+void Mob::takeDamage(int damage)
 {
 	m_health -= damage;
 	m_state = std::make_unique<HitMobState>();

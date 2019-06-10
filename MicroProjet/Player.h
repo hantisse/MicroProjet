@@ -27,6 +27,9 @@ public:
 	void activeSword(bool active);
 	void activeShield(bool active);
 	void attack() override;
+	void kill();
+	void takeDamage(int damage) override;
+	void setImmune(bool b);
 
 	void addActivation(unsigned short const flag);
 	unsigned short getActivationFlags() const;
@@ -52,6 +55,8 @@ private:
 
 	//Stack of states of the players. Used for the player finite states machine.
 	std::stack<StatePtr> m_states;
+
+	bool m_immune;
 
 	b2PolygonShape m_footShape;
 	b2FixtureDef m_footSensorFixDef;

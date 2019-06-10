@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ContactMob.h"
 #include "MobState.h"
+#include "Player.h"
 
 
 ContactMob::ContactMob(EntityID id, tmx::Vector2f position) :
@@ -76,7 +77,8 @@ void ContactMob::computeAttack(FixtureContactData* contactDataA, FixtureContactD
 
 			if (contactDataB->type == FIX_PLAYER)
 			{
-				//*(contactDataB->data) -= *(contactDataA->data);
+				Player* player = static_cast<Player*>(contactDataB->origin);
+				player->takeDamage(contactDataA->data);
 			}
 		}
 		break;

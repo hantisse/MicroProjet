@@ -23,7 +23,8 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	
 	virtual void setDirection(Direction const direction);
-
+	
+	virtual void takeDamage(int damage) = 0;
 	bool dead() const;
 	
 	virtual void attack() {};

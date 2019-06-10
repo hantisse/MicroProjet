@@ -19,6 +19,15 @@ int monMain();
 class EntityModel;
 typedef std::shared_ptr<EntityModel> EntityModelPtr;
 
+enum GameState
+{
+	READY,
+	RUNNING,
+	PAUSED,
+	INFO,
+	LOST,
+};
+
 class Game {
 public:
 	Game();
@@ -51,15 +60,19 @@ public:
 	//Called to remove objects that were "killed" during the m_worl Step function
 	void removeDeadObjects();
 	//Called to remove mobs that are dead
-	void killDeadMobs();
-
+	void removeDeadMobs();
+	
+	//Updates the UI of the player
+	void updatePlayerUI();
+	void updateInfoUI();
 	std::vector<EntityModelPtr> EntityModels;
 
 //private:
 	sf::RenderWindow m_window;
 	sf::View m_gameView;
 	sf::Event m_sfEvent;
-	sf::Text m_text;
+	sf::Text m_playerUI;
+	sf::Text m_infoUI;
 	sf::Font m_font;
 
 	Map m_map;
@@ -72,6 +85,7 @@ public:
 
 	sf::Clock m_clock;
 
-	
+	GameState m_gameState;
+
 
 };

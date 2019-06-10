@@ -23,9 +23,11 @@ MobStatePtr HitMobState::handlePlayerPos(Mob& mob)
 
 void HitMobState::update(Mob& mob) 
 {
+	/*
 	++m_timeOut;
 	if (m_timeOut > 1000)
 		exit(mob);
+	*/
 };
 void HitMobState::enter(Mob& mob)
 {

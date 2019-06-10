@@ -76,6 +76,12 @@ float32 Entity::getMass() const
 }
 
 
+void Entity::invalidate()
+{
+	m_body = nullptr;
+}
+
+
 
 
 

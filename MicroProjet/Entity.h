@@ -59,6 +59,8 @@ public:
 
 	b2Body* getBody() const { return m_body; }
 
+	void invalidate();
+
 	//Called by the Game update function
 	virtual void update(sf::Time dt);
 

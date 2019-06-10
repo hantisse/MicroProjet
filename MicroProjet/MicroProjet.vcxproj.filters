@@ -91,6 +91,8 @@
     <ClCompile Include="ActivationLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HitPlayerState.cpp" />
+    <ClCompile Include="DeadPlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackingMobState.h">
@@ -183,6 +185,8 @@
     <ClInclude Include="ActivationLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HitPlayerState.h" />
+    <ClInclude Include="DeadPlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

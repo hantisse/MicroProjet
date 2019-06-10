@@ -49,7 +49,8 @@ void CustomContactListener::compute(FixtureContactData* contactDataA, FixtureCon
 
 			if (contactDataB->type == FIX_PLAYER)
 			{
-				//*(contactDataB->data) -= *(contactDataA->data);
+				Player* player = static_cast<Player*>(contactDataB->origin);
+				player->takeDamage(contactDataA->data);
 			}
 
 			

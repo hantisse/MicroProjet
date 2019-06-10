@@ -32,28 +32,22 @@ Game::Game() :
 	m_gravity(0.0f, 0.7f),
 	m_world(m_gravity),
 	m_map("Assets/maps/mapTest4.tmx"),
-	m_contactListener()
+	m_contactListener(),
+	m_gameState(READY)
 {
 
 	if (!m_font.loadFromFile("Assets/fonts/pixel_font.ttf"))
 	{
 		std::cout << "Font could not be loaded." << std::endl;
 	}
-	// Create a text
-	m_text = sf::Text("hello", m_font);
-	m_text.setCharacterSize(30);
-	m_text.setFillColor(sf::Color::Red);
-
+	m_playerUI = sf::Text("", m_font);
+	m_playerUI.setCharacterSize(10);
+	m_infoUI = sf::Text("", m_font);
+	m_infoUI.setCharacterSize(20);
 
 
 	createEntityModels();
 	m_player = std::make_unique<Player>();
-
-	/*
-	m_map.createBodies(m_world);
-	createMobBodies();
-	m_player->createBody(m_world);
-	*/
 
 	createBodies();
 	m_world.SetContactListener(&m_contactListener);
@@ -65,27 +59,12 @@ Game::Game(std::string mapPath) :
 	m_gravity(0.0f, 0.7f),
 	m_world(m_gravity),
 	m_map(mapPath),
-	m_contactListener()
+	m_contactListener(),
+	m_gameState(READY)
 {
-	/*
-	if (!m_font.loadFromFile("Assets/fonts/pixel_font.ttf"))
-	{
-		std::cout << "Font could not be loaded." << std::endl;
-	}
-	// Create a text
-	m_text = sf::Text("hello", m_font);
-	m_text.setCharacterSize(30);
-	m_text.setFillColor(sf::Color::Red);
-
-	*/
-
 	createEntityModels();
 	m_player = std::make_unique<Player>();
-	/*
-	m_map.createBodies(m_world);
-	createMobBodies();
-	m_player->createBody(m_world);
-	*/ 
+
 	createBodies();
 	m_world.SetContactListener(&m_contactListener);
 	
@@ -103,8 +82,6 @@ void Game::changeMap(std::string const& mapPath)
 		m_world.DestroyBody(m_world.GetBodyList());
 	}
 
-	assert(m_world.GetBodyCount() == 0);
-
 	createBodies();
 }
 
@@ -117,7 +94,7 @@ void Game::createBodies()
 
 
 void Game::run() {
-	
+	m_gameState = RUNNING;
 	while (m_window.isOpen())
 	{
 		pollSFMLEvent();
@@ -129,17 +106,21 @@ void Game::run() {
 }
 
 void Game::update() {
-	
+	if (m_gameState == LOST) return;
+
 	sf::Time dt = m_clock.restart();
 
 	m_world.Step(timeStep, velocityIterations, positionIterations);
 	m_player->update(dt);
 	updateMobs(dt);
 
+	updatePlayerUI();
+	updateInfoUI();
 	removeDeadObjects();
 
 	m_gameView.setCenter(m_player->getPosition());
-	m_text.setPosition(m_gameView.getCenter());
+	m_playerUI.setPosition(m_gameView.getCenter().x - (viewWidth/2) + 20, m_gameView.getCenter().y - (viewHeight / 2) + 10);
+	m_infoUI.setPosition(m_gameView.getCenter().x - 50, m_gameView.getCenter().y - 50);
 	m_window.setView(m_gameView);
 }
 
@@ -169,15 +150,17 @@ void Game::pollSFMLEvent() {
 
 void Game::render() 
 {
-
-	
 	m_window.clear();
-	m_window.draw(*m_player.get());
-	renderMobs();
+	m_window.draw(m_infoUI);
 
-	m_window.draw(m_map);
-	m_window.draw(m_text);
+	if (m_gameState != LOST)
+	{
+		m_window.draw(*m_player.get());
+		renderMobs();
 
+		m_window.draw(m_map);
+		m_window.draw(m_playerUI);
+	}
 
 	m_window.display();
 }
@@ -238,14 +221,13 @@ void Game::createMobs()
 
 void Game::removeDeadObjects()
 {
-	killDeadMobs();
+	removeDeadMobs();
 
 	for (b2Body* body : m_contactListener.toRemove)
 	{
 		if (body != nullptr)
 		{
 			m_world.DestroyBody(body);
-			std::cout << "remove body : " << body << std::endl;
 		}
 			
 	}
@@ -254,17 +236,60 @@ void Game::removeDeadObjects()
 	m_contactListener.toRemove.clear();
 }
 
-void Game::killDeadMobs()
+void Game::removeDeadMobs()
 {
 	std::set<b2Body*> toDestroy;
-	
-	std::for_each(m_mobs.begin(), m_mobs.end(), [&toDestroy](auto& mob) { if (mob->dead() && !mob->isAnimationPlaying()) toDestroy.insert(mob->getBody());  });
-	m_mobs.erase(std::remove_if(m_mobs.begin(), m_mobs.end(), [](auto const& mob) { return mob->dead() && !mob->isAnimationPlaying(); }), m_mobs.end());
-	
+
+	auto mobRemove = 
+	[&toDestroy] (auto& mob)
+	{
+			if (mob->dead() && !mob->isAnimationPlaying())
+			{
+				toDestroy.insert(mob->getBody());
+				mob->invalidate();
+			}
+	};
+
+	std::for_each(m_mobs.begin(), m_mobs.end(), mobRemove);
+
+	m_mobs.erase(std::remove_if(m_mobs.begin(), m_mobs.end(), 
+		[](auto const& mob) { return mob->dead() && !mob->isAnimationPlaying(); }), m_mobs.end());
 	for (auto& mobBody : toDestroy)
 	{
-		if(mobBody != nullptr)
-			m_world.DestroyBody(mobBody);
+		m_world.DestroyBody(mobBody);
+	}
+
+}
+
+void Game::updatePlayerUI()
+{
+	
+	std::string s = "Unlocked : ";
+	if ((m_player->getActivationFlags() & ACTIV_JUMP) == ACTIV_JUMP)
+	{
+		s += "Jump ";
+	}
+	if ((m_player->getActivationFlags() & ACTIV_SHIELD) == ACTIV_SHIELD)
+	{
+		s += "Block ";
+	}
+	if ((m_player->getActivationFlags() & ACTIV_ATTACK) == ACTIV_ATTACK)
+	{
+		s += "Attack ";
+	}
+
+	m_playerUI.setString(s);
+
+}
+
+void Game::updateInfoUI()
+{
+	if (m_player->dead() && m_player->isAnimationPlaying())
+	{
+		m_infoUI.setString("You lost");
+		m_infoUI.setColor(sf::Color::Red);
+
+		m_gameState = LOST;
 	}
 
 }
@@ -357,7 +382,6 @@ void Game::createEntityModels()
 
 int monMain()
 {
-
 
 	Game game;
 	game.run();

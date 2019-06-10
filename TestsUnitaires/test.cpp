@@ -132,19 +132,94 @@ TEST(MobTest, DistanceMobCreate)
 
 }
 
+TEST(MobTest, DistanceMobAttack)
+{
 
-TEST(MobTest, MobHit)
+	Game game; //to create models
+	b2World world(b2Vec2(0, 9.8f));
+	MobFireElemental fireElem(tmx::Vector2f(0, 0));
+	fireElem.createBody(world);
+
+	EXPECT_EQ(world.GetBodyCount(), 1);
+	fireElem.attack();
+	EXPECT_EQ(world.GetBodyCount(), 2);
+	int nbFixtures = 0;
+	b2Body* projectile = world.GetBodyList();
+	EXPECT_EQ(projectile->GetGravityScale(), 0);
+
+
+	EXPECT_EQ(projectile->GetType(), b2_dynamicBody);
+	EXPECT_EQ(projectile->GetPosition().x, world.GetBodyList()->GetPosition().x);
+	   
+	for (b2Fixture* fixture = projectile->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	{
+		++nbFixtures;
+	}
+	EXPECT_EQ(nbFixtures, 1);
+
+	b2Fixture* fixture = projectile->GetFixtureList();
+	EXPECT_TRUE(fixture->IsSensor());
+	FixtureContactData* data = static_cast<FixtureContactData*>(fixture->GetUserData());
+	EXPECT_TRUE(data->type, FIX_BULLET);
+	EXPECT_TRUE(data->data, 10);
+
+
+}
+
+TEST(GameTest, MobRemoval)
+{
+
+	Game game("../MicroProjet/Assets/maps/mapTest3.tmx"); //to create models
+	game.m_gameState = RUNNING;
+	EXPECT_EQ(game.m_mobs.size(), 2);
+
+	int worldBodyCount = game.m_world.GetBodyCount();
+	
+	game.m_mobs[0]->takeDamage(20);
+	game.m_mobs[1]->takeDamage(20);
+	EXPECT_TRUE(game.m_mobs[0]->dead());
+	EXPECT_TRUE(game.m_mobs[1]->dead());
+	EXPECT_TRUE(!game.m_mobs[1]->isAnimationPlaying());
+	EXPECT_TRUE(!game.m_mobs[1]->isAnimationPlaying());
+
+	game.update();
+
+	while(!game.m_mobs.empty() && game.m_mobs[0]->isAnimationPlaying())
+	{
+		game.update();
+	}
+	while (!game.m_mobs.empty() && game.m_mobs[1]->isAnimationPlaying())
+	{
+		game.update();
+	}
+	
+	
+	
+	EXPECT_EQ(game.m_world.GetBodyCount(), worldBodyCount - 2);
+	EXPECT_TRUE(game.m_mobs.empty());
+	
+}
+
+
+TEST(LivingEntityTest, TakeDamage)
 {
 	Game game; //to create models
 
 	b2World world(b2Vec2(0, 9.8f));
 	MobSlime slime(tmx::Vector2f(0, 0));
-
+	Player player;
+	
 	slime.createBody(world);
+	player.createBody(world);
 
-	slime.hitByPlayer(10);
+	slime.takeDamage(10);
 	EXPECT_TRUE(!slime.dead());
-	slime.hitByPlayer(10);
+	slime.takeDamage(10);
 	EXPECT_TRUE(slime.dead());
+
+	player.takeDamage(10);
+	EXPECT_TRUE(!player.dead());
+	player.takeDamage(40);
+	EXPECT_TRUE(player.dead());
 
 }

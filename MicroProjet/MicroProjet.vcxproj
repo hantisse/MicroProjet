@@ -165,11 +165,13 @@
     <ClInclude Include="CollisionLayer.h" />
     <ClInclude Include="ContactMob.h" />
     <ClInclude Include="DeadMobState.h" />
+    <ClInclude Include="DeadPlayerState.h" />
     <ClInclude Include="DistanceMob.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="CustomContactListener.h" />
     <ClInclude Include="EntityModel.h" />
     <ClInclude Include="HitMobState.h" />
+    <ClInclude Include="HitPlayerState.h" />
     <ClInclude Include="JumpingPlayerState.h" />
     <ClInclude Include="LivingEntity.h" />
     <ClInclude Include="Mob.h" />
@@ -197,11 +199,13 @@
     <ClCompile Include="CollisionLayer.cpp" />
     <ClCompile Include="ContactMob.cpp" />
     <ClCompile Include="DeadMobState.cpp" />
+    <ClCompile Include="DeadPlayerState.cpp" />
     <ClCompile Include="DistanceMob.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="CustomContactListener.cpp" />
     <ClCompile Include="EntityModel.cpp" />
     <ClCompile Include="HitMobState.cpp" />
+    <ClCompile Include="HitPlayerState.cpp" />
     <ClCompile Include="JumpingPlayerState.cpp" />
     <ClCompile Include="LivingEntity.cpp" />
     <ClCompile Include="Mob.cpp" />

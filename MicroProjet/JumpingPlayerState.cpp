@@ -31,11 +31,11 @@ StatePtr JumpingPlayerState::handleInput(Player& player, sf::Event sfEvent)
 			break;
 		case sf::Keyboard::D:
 			player.setDirection(Direction::RIGHT);
-			player.setLinearVelocity(b2Vec2(player.getMaxVel()/2, 0));
+			player.setLinearVelocity(b2Vec2(player.getMaxVel()/2, player.getLinearVelocity().y));
 			break;
 		case sf::Keyboard::Q:
 			player.setDirection(Direction::LEFT);
-			player.setLinearVelocity(b2Vec2(-player.getMaxVel()/2.f, 0));
+			player.setLinearVelocity(b2Vec2(-player.getMaxVel() / 2.f, player.getLinearVelocity().y));
 
 			break;
 

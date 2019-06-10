@@ -3,6 +3,7 @@
 #include "Mob.h"
 #include <iostream>
 #include "StandingPlayerState.h"
+#include "DeadPlayerState.h"
 
 
 Player::Player() :
@@ -70,6 +71,7 @@ void Player::loadAnimations()
 	m_animator.addAnimation("fall", fall, sf::seconds(.3f));
 	m_animator.addAnimation("attack", attack, sf::seconds(.3f));
 	m_animator.addAnimation("block", block, sf::seconds(.1f));
+	m_animator.addAnimation("die", idle, sf::seconds(.1f));
 
 }
 
@@ -218,7 +220,7 @@ void Player::computeAttack(FixtureContactData* contactDataA, FixtureContactData*
 
 				
 				Mob* mob = static_cast<Mob*>(contactDataB->origin);
-				mob->hitByPlayer(getModel()->attackPower);
+				mob->takeDamage(getModel()->attackPower);
 				
 			}
 		}
@@ -243,4 +245,24 @@ void Player::endState()
 {
 	m_states.pop();
 	m_states.top()->enter(*this);
+}
+
+
+void Player::kill()
+{
+	
+}
+void Player::takeDamage(int damage)
+{
+	m_health -= damage;
+	if (dead())
+	{
+		m_states.push(std::make_unique<DeadPlayerState>());
+		m_states.top()->enter(*this);
+	}
+	
+}
+void Player::setImmune(bool b)
+{
+
 }

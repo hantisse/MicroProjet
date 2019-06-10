@@ -16,7 +16,7 @@ public:
 	void updateDistToPlayer(sf::Vector2f playerPos);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	b2Body* getBody() { return m_body; };
+	b2Body* getBody() const;
 
 	virtual void activeAttackBox(bool active) {};
 	bool canAttack() const; 
@@ -24,7 +24,7 @@ public:
 	bool awake() const;
 	int getAttackRate() const;
 	int getAttackTiming() const;
-	void hitByPlayer(int damage);
+	void takeDamage(int damage) override;
 
 protected:
 	//Updated during each loop

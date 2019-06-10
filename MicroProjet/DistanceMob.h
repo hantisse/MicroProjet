@@ -2,6 +2,7 @@
 #include "Mob.h"
 #include "Projectile.h"
 
+//Mobs that attack from afar with projectiles
 class DistanceMob : public Mob
 {
 public:

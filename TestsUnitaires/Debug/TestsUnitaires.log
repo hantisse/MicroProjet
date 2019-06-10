@@ -81,5 +81,5 @@ d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(4
               T=unsigned int
           ]
 d:\users\hantisse\source\repos\microprojet\microprojet\game.h(19): warning C4099: 'EntityModel': type name first seen using 'struct' now seen using 'class'
-  d:\users\hantisse\source\repos\microprojet\microprojet\entitymodel.h(22): note: see declaration of 'EntityModel'
+  d:\users\hantisse\source\repos\microprojet\microprojet\entitymodel.h(23): note: see declaration of 'EntityModel'
   TestsUnitaires.vcxproj -> D:\Users\Hantisse\source\repos\MicroProjet\Debug\TestsUnitaires.exe

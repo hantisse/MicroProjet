@@ -6,7 +6,6 @@
 
 using namespace std::literals::string_view_literals;
 
-
 ActivationLayer::ActivationLayer(tmx::Map const& map) :
 	ObjectLayer("ACTIVATION", map)
 {
@@ -41,7 +40,6 @@ ActivationLayer::ActivationLayer(tmx::Map const& map) :
 
 void ActivationLayer::createBodies(b2World& world)
 {
-	
 	b2FixtureDef fixDef;
 	fixDef.filter.categoryBits = FIX_ACTIVATION;
 

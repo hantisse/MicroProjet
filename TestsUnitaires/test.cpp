@@ -4,6 +4,7 @@
 #include "../MicroProjet/PlayerState.h"
 #include "../MicroProjet/Game.h"
 #include "../MicroProjet/MobSlime.h"
+#include "../MicroProjet/MobFireElemental.h"
 #include "SFML/System/Time.hpp"
 
 TEST(MapTest, MapBodies) {
@@ -40,6 +41,7 @@ TEST(PlayerTest, CreatePlayer) {
 	Game game; //to create models
 	b2World world(b2Vec2(0, 9.8f));
 	Player player;
+	
 	player.createBody(world);
 	b2Body* body = world.GetBodyList();
 
@@ -51,26 +53,32 @@ TEST(PlayerTest, CreatePlayer) {
 	}
 
 	EXPECT_EQ(nbFixtures, 6);
+	EXPECT_EQ(player.getJumpPower(), 8);
+	EXPECT_EQ(player.getMaxVel(), 5);
+	EXPECT_EQ(nbFixtures, 6);
 	EXPECT_EQ(player.getActivationFlags(), 0x0000);
 
 
 }
 
-TEST(PlayerTest, SKillActivationJUMP)
+TEST(PlayerTest, SKillActivation)
 {
 
-	Game game("../TestsUnitaires/Assets/maps/skillActivation_1.tmx"); //to create models
-	EXPECT_EQ(game.m_player->getPosition().x, 100);
+	Game game("../TestsUnitaires/Assets/maps/skillActivation_1.tmx");
 	game.update();
-	game.update();
-	game.update();
-	game.update();
-
 	EXPECT_EQ(game.m_player->getActivationFlags(), 0x0001);
+
+	game.changeMap("../TestsUnitaires/Assets/maps/skillActivation_2.tmx");
+	game.update();
+	EXPECT_EQ(game.m_player->getActivationFlags(), 0x0002);
+
+	game.changeMap("../TestsUnitaires/Assets/maps/skillActivation_3.tmx");
+	game.update();
+	EXPECT_EQ(game.m_player->getActivationFlags(), 0x0004);
 
 }
 
-TEST(MobTest, MobSlimeCreate)
+TEST(MobTest, ContactMobCreate)
 {
 	Game game; //to create models
 
@@ -88,11 +96,44 @@ TEST(MobTest, MobSlimeCreate)
 	}
 
 	EXPECT_EQ(nbFixtures, 3);
-	
+
+	EXPECT_EQ(slime.getJumpPower(), 0);
+	EXPECT_EQ(slime.getMaxVel(), 1);
+	EXPECT_EQ(slime.getAttackRate(), 3000);
+	EXPECT_EQ(slime.getAttackTiming(), 700);
+	EXPECT_EQ(slime.canMove(), true);
 
 }
 
-TEST(MobTest, MobSlimeHit)
+TEST(MobTest, DistanceMobCreate)
+{
+	Game game; //to create models
+
+	b2World world(b2Vec2(0, 9.8f));
+	MobFireElemental fireElem(tmx::Vector2f(0, 0));
+
+	fireElem.createBody(world);
+	b2Body* body = world.GetBodyList();
+
+	EXPECT_EQ(body->GetType(), b2_dynamicBody);
+	int nbFixtures = 0;
+	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	{
+		++nbFixtures;
+	}
+
+	EXPECT_EQ(nbFixtures, 1);
+
+	EXPECT_EQ(fireElem.getJumpPower(), 0);
+	EXPECT_EQ(fireElem.getMaxVel(), 0);
+	EXPECT_EQ(fireElem.getAttackRate(), 3000);
+	EXPECT_EQ(fireElem.getAttackTiming(), 0);
+	EXPECT_EQ(fireElem.canMove(), false);
+
+}
+
+
+TEST(MobTest, MobHit)
 {
 	Game game; //to create models
 
@@ -105,6 +146,5 @@ TEST(MobTest, MobSlimeHit)
 	EXPECT_TRUE(!slime.dead());
 	slime.hitByPlayer(10);
 	EXPECT_TRUE(slime.dead());
-
 
 }

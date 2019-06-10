@@ -8,6 +8,8 @@ public:
 
 
 	MobState() = default;
+
+	//To change state depending on the player position
 	virtual MobStatePtr handlePlayerPos(Mob& mob) = 0;
 
 	virtual void update(Mob& mob);

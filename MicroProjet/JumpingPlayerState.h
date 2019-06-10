@@ -3,6 +3,7 @@
 
 #include "PlayerState.h"
 
+//State of Player while jumping
 class JumpingPlayerState : public PlayerState
 {
 public:

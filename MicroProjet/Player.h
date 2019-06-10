@@ -29,15 +29,20 @@ public:
 	void attack() override;
 
 	void addActivation(unsigned short const flag);
-	unsigned short getActivationFlags();
+	unsigned short getActivationFlags() const;
 
 	void handleInput(sf::Event& sfEvent);
 	void update(sf::Time dt) override;
 
+	//Removes the first element of the stack of state : m_states
 	void endState();
 private:
-
+	//Loads animations in the animator m_animator.
+	//Called in the constructor.
 	void loadAnimations() override;
+
+	//Called in the createBody function, after the b2Body has been created. 
+	//Initializes the sword and shield fixtures.
 	void createWeaponHitBoxes(b2World& world);
 	void computeAttack(FixtureContactData* contactDataA, FixtureContactData* contactDataB);
 
@@ -45,7 +50,9 @@ private:
 
 	unsigned short m_activationFlags;
 
+	//Stack of states of the players. Used for the player finite states machine.
 	std::stack<StatePtr> m_states;
+
 	b2PolygonShape m_footShape;
 	b2FixtureDef m_footSensorFixDef;
 	FixtureContactData m_footData;

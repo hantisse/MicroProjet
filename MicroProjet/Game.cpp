@@ -47,15 +47,16 @@ Game::Game() :
 
 
 	createEntityModels();
-
 	m_player = std::make_unique<Player>();
 
+	/*
 	m_map.createBodies(m_world);
 	createMobBodies();
 	m_player->createBody(m_world);
-	m_world.SetContactListener(&m_contactListener);
+	*/
 
-	std::cout << "world : " << &m_world << std::endl;
+	createBodies();
+	m_world.SetContactListener(&m_contactListener);
 }
 
 Game::Game(std::string mapPath) :
@@ -66,7 +67,7 @@ Game::Game(std::string mapPath) :
 	m_map(mapPath),
 	m_contactListener()
 {
-
+	/*
 	if (!m_font.loadFromFile("Assets/fonts/pixel_font.ttf"))
 	{
 		std::cout << "Font could not be loaded." << std::endl;
@@ -76,21 +77,43 @@ Game::Game(std::string mapPath) :
 	m_text.setCharacterSize(30);
 	m_text.setFillColor(sf::Color::Red);
 
-
+	*/
 
 	createEntityModels();
-
 	m_player = std::make_unique<Player>();
-
+	/*
 	m_map.createBodies(m_world);
 	createMobBodies();
 	m_player->createBody(m_world);
+	*/ 
+	createBodies();
 	m_world.SetContactListener(&m_contactListener);
-
-	std::cout << "world : " << &m_world << std::endl;
+	
 }
 
+void Game::changeMap(std::string const& mapPath)
+{
+	m_mobs.clear();
+	m_map = Map(mapPath);
+	m_player = std::make_unique<Player>();
+	const int nbBodies = m_world.GetBodyCount();
+	for (int i = 0; i < nbBodies; ++i)
+	{
+		std::cout << m_world.GetBodyList() << " " << m_world.GetBodyCount() << std::endl; 
+		m_world.DestroyBody(m_world.GetBodyList());
+	}
 
+	assert(m_world.GetBodyCount() == 0);
+
+	createBodies();
+}
+
+void Game::createBodies()
+{
+	m_map.createBodies(m_world);
+	createMobBodies();
+	m_player->createBody(m_world);
+}
 
 
 void Game::run() {

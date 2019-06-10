@@ -1,6 +1,7 @@
 #pragma once
 #include "PlayerState.h"
 
+//State of blocking Player
 class BlockingPlayerState : public PlayerState
 
 {

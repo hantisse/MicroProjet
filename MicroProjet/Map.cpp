@@ -7,10 +7,6 @@
 #include <string_view>
 using namespace std::literals::string_view_literals;
 
-
-
-
-
 Map::Map(std::string path) 
 {
 	m_tmxMap.load(path);

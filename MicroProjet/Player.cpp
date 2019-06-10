@@ -10,13 +10,7 @@ Player::Player() :
 {
 
 	m_activationFlags = 0x0000;
-	/*
-	m_maxHealth = 50;
-	m_health = m_maxHealth;
-	m_maxVel = 5;
-	m_jumpPower = 8;
-	m_attackPower = 10;
-	*/
+
 	m_bodyDef.position.Set(100, 0);
 	m_bodyDef.type = b2_dynamicBody;
 
@@ -240,7 +234,7 @@ void Player::addActivation(unsigned short const flag)
 	m_activationFlags |= flag;
 }
 
-unsigned short Player::getActivationFlags()
+unsigned short Player::getActivationFlags() const
 {
 	return m_activationFlags;
 }

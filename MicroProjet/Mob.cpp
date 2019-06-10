@@ -64,28 +64,29 @@ void Mob::updateDistToPlayer(sf::Vector2f playerPos)
 
 }
 
-bool Mob::canAttack() 
+bool Mob::canAttack() const
 { 
 	return m_distanceToPlayer < getModel()->attackDist; 
 }
 
-bool Mob::canMove() 
+bool Mob::canMove() const
 { 
 	return getModel()->canMove; 
 }
-bool Mob::awake() { 
+bool Mob::awake() const
+{ 
 	return m_distanceToPlayer < getModel()->wakeDistance; 
 }
-int Mob::getAttackRate() 
+int Mob::getAttackRate() const
 {
 	return getModel()->attackRate; 
 }
-int Mob::getAttackTiming() 
+int Mob::getAttackTiming() const
 { 
 	return getModel()->attackTiming; 
 }
 
-MobModel const* Mob::getModel()
+MobModel const* Mob::getModel() const
 {
 	assert(m_model->type == MOD_MOB);
 	return static_cast<MobModel*>(m_model.get());

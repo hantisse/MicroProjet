@@ -3,6 +3,7 @@
 #include <set>
 #include "Player.h"
 
+//Handles contacts
 class CustomContactListener : public b2ContactListener
 {
 public:
@@ -11,6 +12,7 @@ public:
 	void EndContact(b2Contact* contact) override;
 	void compute(FixtureContactData* contactDataA, FixtureContactData* contactDataB);
 
+	//Bodies to remove after the b2World Step function
 	std::set<b2Body*> toRemove;
 
 

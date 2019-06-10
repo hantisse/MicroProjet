@@ -39,6 +39,7 @@ protected:
 	b2Body* m_body;
 	b2BodyDef m_bodyDef;
 	b2Fixture* m_bodyFixture;
+	//Data used if the b2Body enters in contact with another body
 	FixtureContactData m_bodyData;
 
 	sf::Sprite m_sprite;
@@ -52,21 +53,30 @@ public:
 	Entity(EntityID id);
 	
 	Entity(EntityID id, b2Vec2 bodyPosition);
+
+	//First function to call after constructor
+	virtual void createBody(b2World& world);
+
+	b2Body* getBody() const { return m_body; }
+
+	//Called by the Game update function
 	virtual void update(sf::Time dt);
 
+	//Called by the Game render function
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	
+	//Play the animation. Interrupts the current animation
 	void playAnimation(std::string animation);
 	void stopAnimation();
+
 	bool isAnimationPlaying();
 
-	virtual void createBody(b2World& world);
-	b2Body* getBody() { return m_body; }
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	//To apply sudden change in the entity speed
 	virtual void applyLinearImpulseToCenter(b2Vec2 const& impulse, bool wake);
+	//To change the body speed
 	void setLinearVelocity(b2Vec2 const& impulse);
-	void setUserData(bool active, FixtureType type, int* data);
-	b2Vec2 getLinearVelocity();
-	float32 getMass();
-	//void SetPosition(const sf::Vector2f& v);
+	b2Vec2 getLinearVelocity() const;
+	float32 getMass() const;
 	const sf::Vector2f getPosition() { return sf::Vector2f(m_body->GetPosition().x, m_body->GetPosition().y); };
 
 	

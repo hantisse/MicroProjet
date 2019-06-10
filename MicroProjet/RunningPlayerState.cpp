@@ -106,13 +106,13 @@ void RunningPlayerState::enter(Player& player)
 
 	if (m_hasActed)
 	{
-		backFromJump(player);
+		backFromAction(player);
 		m_hasActed = false;
 	}
 
 }
 
-void RunningPlayerState::backFromJump(Player& player)
+void RunningPlayerState::backFromAction(Player& player)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && player.getDirection() == Direction::LEFT)
 	{

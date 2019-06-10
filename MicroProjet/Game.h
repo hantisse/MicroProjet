@@ -23,23 +23,37 @@ class Game {
 public:
 	Game();
 	Game(std::string mapPath);
+
+	//Game loop
 	void run();
 
-
-	std::vector<EntityModelPtr> EntityModels;
 	void pollSFMLEvent();
 	void update();
 	void render();
 
+	//Called before creating entities
 	void createEntityModels();
 
+	void changeMap(std::string const& mapPath);
+
+	void createBodies();
+	//CreateEntityModels needs to be called beforehand
 	void createMobs();
+
+	//Needs to be called after the mobs were created
 	void createMobBodies();
+
+	//Called in the update funtion
 	void updateMobs(sf::Time dt);
+	//Called in the render function
 	void renderMobs();
 
+	//Called to remove objects that were "killed" during the m_worl Step function
 	void removeDeadObjects();
+	//Called to remove mobs that are dead
 	void killDeadMobs();
+
+	std::vector<EntityModelPtr> EntityModels;
 
 //private:
 	sf::RenderWindow m_window;

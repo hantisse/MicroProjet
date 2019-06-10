@@ -5,11 +5,14 @@
 #include "ActivationLayer.h"
 #include "Mob.h"
 
+//Class for parsed .tmx maps
 class Map : public sf::Drawable
 {
 public:
 	Map() = default;
 	Map(std::string path);
+
+	//Needs to be called in Game class constructor
 	void createBodies(b2World& b2World);
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

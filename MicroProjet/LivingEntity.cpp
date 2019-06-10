@@ -46,16 +46,26 @@ void LivingEntity::setDirection(Direction const direction)
 	}
 }
 
-int LivingEntity::getMaxVel()
+bool LivingEntity::dead() const
+{ 
+	return m_health <= 0; 
+}
+
+Direction LivingEntity::getDirection() const
+{ 
+	return m_direction; 
+}
+
+int LivingEntity::getMaxVel() const
 { 
 	return getModel()->maxVel; 
 }
-int LivingEntity::getJumpPower() 
+int LivingEntity::getJumpPower() const
 { 
 	return getModel()->jumpPower; 
 }
 
-LivingEntityModel* LivingEntity::getModel()
+LivingEntityModel const* LivingEntity::getModel() const
 {
 	assert(m_model->type == MOD_LIV || m_model->type == MOD_MOB);
 	return static_cast<LivingEntityModel*>(m_model.get());

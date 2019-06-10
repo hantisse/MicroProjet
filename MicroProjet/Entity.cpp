@@ -65,12 +65,12 @@ void Entity::setLinearVelocity(b2Vec2 const& impulse)
 	m_body->SetLinearVelocity(impulse);
 }
 
-b2Vec2 Entity::getLinearVelocity()
+b2Vec2 Entity::getLinearVelocity() const
 {
 	return m_body->GetLinearVelocity();
 }
 
-float32 Entity::getMass()
+float32 Entity::getMass() const
 {
 	return m_body->GetMass();
 }

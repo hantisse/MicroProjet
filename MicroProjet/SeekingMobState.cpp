@@ -22,6 +22,8 @@ MobStatePtr SeekingMobState::handlePlayerPos(Mob& mob)
 		return std::make_unique<SleepingMobState>();
 	}
 
+	return nullptr;
+
 }
 
 void SeekingMobState::update(Mob& mob)

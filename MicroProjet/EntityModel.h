@@ -1,6 +1,7 @@
 #pragma once
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
+#include <Thor/Animations.hpp>
 
 
 enum EntityID
@@ -18,6 +19,12 @@ enum ModelType
 	MOD_ENTITY,
 	MOD_LIV,
 	MOD_MOB,
+};
+
+enum AttackBehaviour
+{
+	BEHAV_DIST = 0x0001,
+	BEHAV_CONTACT = 0x0002,
 };
 
 //Models created by the Game class, used to create similar entities
@@ -59,6 +66,9 @@ struct MobModel : LivingEntityModel
 {
 	MobModel(std::string const& texturePath);
 
+	//behaviours to add
+	unsigned short AttackBehaviourFilter;
+
 	//distance to the player to enter attackingState
 	int attackDist;
 	//distante to the player to wake the mob. Moving mobs will move toward the player
@@ -67,7 +77,12 @@ struct MobModel : LivingEntityModel
 	int attackRate;
 	//time before actually dealing the damage when the mob attacks
 	int attackTiming;
-	//id the mob can move by itself
+	//origin of the sprite
+	std::pair<int, int> spriteOrigin;
+	//if the mob can move by itself
 	bool canMove;
+
+	//copied to the mob class
+	thor::Animator<sf::Sprite, std::string> animator;
 };
 

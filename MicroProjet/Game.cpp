@@ -9,8 +9,6 @@
 #include "CollisionLayer.h"
 #include "SFMLOrthogonalLayer.hpp"
 
-#include "MobFireElemental.h"
-#include "MobSlime.h"
 
 
 using namespace std::literals::string_view_literals;
@@ -20,14 +18,13 @@ std::vector<EntityModelPtr>* GameEntityModels;
 
 const float viewWidth = 400*1.2;
 const float viewHeight = 300*1.2;
-const int SCALE = 30;
 
 const float32 timeStep = 1.0f / 60.0f;
 const int32 velocityIterations = 6;
 const int32 positionIterations = 2;
 
 Game::Game() :
-	m_window(sf::VideoMode(800, 600), "SFML works!"),
+	m_window(sf::VideoMode(800, 600), "MicroProjet!"),
 	m_gameView(sf::Vector2f(viewHeight / 2, viewHeight / 2), sf::Vector2f(viewWidth, viewHeight)),
 	m_gravity(0.0f, 0.7f),
 	m_world(m_gravity),
@@ -62,6 +59,16 @@ Game::Game(std::string mapPath) :
 	m_contactListener(),
 	m_gameState(READY)
 {
+	if (!m_font.loadFromFile("Assets/fonts/pixel_font.ttf"))
+	{
+		std::cout << "Font could not be loaded." << std::endl;
+	}
+
+	m_playerUI = sf::Text("", m_font);
+	m_playerUI.setCharacterSize(10);
+	m_infoUI = sf::Text("", m_font);
+	m_infoUI.setCharacterSize(20);
+
 	createEntityModels();
 	m_player = std::make_unique<Player>();
 
@@ -151,16 +158,17 @@ void Game::pollSFMLEvent() {
 void Game::render() 
 {
 	m_window.clear();
-	m_window.draw(m_infoUI);
 
 	if (m_gameState != LOST)
 	{
-		m_window.draw(*m_player.get());
-		renderMobs();
 
 		m_window.draw(m_map);
+		renderMobs();
+		m_window.draw(*m_player.get());
+
 		m_window.draw(m_playerUI);
 	}
+	m_window.draw(m_infoUI);
 
 	m_window.display();
 }
@@ -204,20 +212,22 @@ void Game::createMobs()
 		{
 		case EntityID::FIRE_ELEMENTAL:
 
-			m_mobs.push_back(std::make_unique<MobFireElemental>(tmx::Vector2f(
+			m_mobs.push_back(std::make_unique<Mob>(FIRE_ELEMENTAL, tmx::Vector2f(
+				object.getPosition().x + object.getAABB().width / 2,
+				object.getPosition().y + object.getAABB().height / 2)));			
+			break;
+		case EntityID::SLIME:
+			m_mobs.push_back(std::make_unique<Mob>(SLIME, tmx::Vector2f(
 				object.getPosition().x + object.getAABB().width / 2,
 				object.getPosition().y + object.getAABB().height / 2)));
 			break;
-		case EntityID::SLIME:
-			m_mobs.push_back(std::make_unique<MobSlime>(tmx::Vector2f(
-				object.getPosition().x + object.getAABB().width / 2,
-				object.getPosition().y + object.getAABB().height / 2)));
 		default:
 			break;
 		}
 	}
 
 }
+
 
 void Game::removeDeadObjects()
 {
@@ -231,8 +241,7 @@ void Game::removeDeadObjects()
 		}
 			
 	}
-
-	
+		
 	m_contactListener.toRemove.clear();
 }
 
@@ -294,6 +303,7 @@ void Game::updateInfoUI()
 
 }
 
+//TODO: add parsing from file
 void Game::createEntityModels()
 {
 	EntityModels = std::vector<EntityModelPtr>(EntityID::NB_ENTITY_ID);
@@ -307,7 +317,7 @@ void Game::createEntityModels()
 	player->spriteRect = sf::IntRect(0, 0, 50, 36);
 
 	player->maxHealth = 50;
-	player->maxVel = 5;
+	player->maxVel = 7;
 	player->jumpPower = 8;
 	player->attackPower = 10;
 	
@@ -317,11 +327,15 @@ void Game::createEntityModels()
 	
 	
 	fire_elemental->id = EntityID::FIRE_ELEMENTAL;
+	fire_elemental->AttackBehaviourFilter = BEHAV_DIST;
+
 	fire_elemental->bodyShape.SetAsBox(4.f, 5.f);
 	fire_elemental->bodyFixDef.shape = &fire_elemental->bodyShape;
 	fire_elemental->bodyFixDef.density = 15.f;
 	fire_elemental->bodyFixDef.filter.categoryBits = FIX_MOB;
 	fire_elemental->spriteRect = sf::IntRect(0, 0, 32, 32);
+
+	fire_elemental->spriteOrigin = std::make_pair<int, int>(16,28);
 
 	fire_elemental->canMove = false;
 	fire_elemental->wakeDistance = 0;
@@ -332,19 +346,53 @@ void Game::createEntityModels()
 	fire_elemental->attackTiming = 0;
 	fire_elemental->jumpPower = 0;
 	fire_elemental->maxVel = 0;
-	
 
+	thor::FrameAnimation idle, attack, die;
+
+	idle.addFrame(1.f, sf::IntRect(0, 32, 32, 32));
+	idle.addFrame(1.f, sf::IntRect(32, 32, 32, 32));
+	idle.addFrame(1.f, sf::IntRect(64, 32, 32, 32));
+	idle.addFrame(1.f, sf::IntRect(96, 32, 32, 32));
+	idle.addFrame(1.f, sf::IntRect(128, 32, 32, 32));
+	idle.addFrame(1.f, sf::IntRect(160, 32, 32, 32));
+
+
+	attack.addFrame(1.f, sf::IntRect(0, 64, 32, 32));
+	attack.addFrame(1.f, sf::IntRect(32, 64, 32, 32));
+	attack.addFrame(1.f, sf::IntRect(64, 64, 32, 32));
+	attack.addFrame(1.f, sf::IntRect(96, 64, 32, 32));
+	attack.addFrame(1.f, sf::IntRect(128, 64, 32, 32));
+	attack.addFrame(1.f, sf::IntRect(160, 64, 32, 32));
+	attack.addFrame(1.f, sf::IntRect(192, 64, 32, 32));
+	attack.addFrame(1.f, sf::IntRect(224, 64, 32, 32));
+
+	die.addFrame(1.f, sf::IntRect(0, 128, 32, 32));
+	die.addFrame(1.f, sf::IntRect(32, 128, 32, 32));
+	die.addFrame(1.f, sf::IntRect(64, 128, 32, 32));
+	die.addFrame(1.f, sf::IntRect(96, 128, 32, 32));
+	die.addFrame(1.f, sf::IntRect(128, 128, 32, 32));
+	die.addFrame(1.f, sf::IntRect(160, 128, 32, 32));
+	die.addFrame(1.f, sf::IntRect(192, 128, 32, 32));
+	die.addFrame(1.f, sf::IntRect(224, 128, 32, 32));
+
+	fire_elemental->animator.addAnimation("idle", idle, sf::seconds(.5f));
+	fire_elemental->animator.addAnimation("attack", attack, sf::seconds(.3f));
+	fire_elemental->animator.addAnimation("die", die, sf::seconds(.3f));
 	
 	EntityModels[EntityID::FIRE_ELEMENTAL] = fire_elemental;
 
 	std::shared_ptr<MobModel> slime = std::make_shared<MobModel>("Assets/images/mobs/slime.png");
 
 	slime->id = EntityID::SLIME;
+	slime->AttackBehaviourFilter = BEHAV_CONTACT;
+
 	slime->bodyShape.SetAsBox(8.f, 6.f);
 	slime->bodyFixDef.shape = &slime->bodyShape;
 	slime->bodyFixDef.density = 15.f;
 	slime->bodyFixDef.filter.categoryBits = FIX_MOB;
 	slime->spriteRect = sf::IntRect(0, 0, 32, 32);
+
+	slime->spriteOrigin = std::make_pair<int, int>(16, 20);
 
 	slime->maxHealth = 20;
 	slime->attackPower = 10;
@@ -355,7 +403,37 @@ void Game::createEntityModels()
 	slime->attackTiming = 700;
 	slime->canMove = true;
 	slime->maxVel = 1;
-	
+
+	thor::FrameAnimation slimeIdle, slimeAttack, slimeDie;
+
+	slimeIdle.addFrame(1.f, sf::IntRect(224, 0, 32, 24));
+	slimeIdle.addFrame(1.f, sf::IntRect(192, 0, 32, 24));
+	slimeIdle.addFrame(1.f, sf::IntRect(160, 0, 32, 24));
+	slimeIdle.addFrame(1.f, sf::IntRect(128, 0, 32, 24));
+	slimeIdle.addFrame(1.f, sf::IntRect(96, 0, 32, 24));
+	slimeIdle.addFrame(1.f, sf::IntRect(64, 0, 32, 24));
+	slimeIdle.addFrame(1.f, sf::IntRect(32, 0, 32, 24));
+	slimeIdle.addFrame(1.f, sf::IntRect(0, 0, 32, 24));
+
+
+	slimeAttack.addFrame(1.f, sf::IntRect(224, 24, 32, 25));
+	slimeAttack.addFrame(1.f, sf::IntRect(192, 24, 32, 25));
+	slimeAttack.addFrame(1.f, sf::IntRect(160, 24, 32, 25));
+	slimeAttack.addFrame(1.f, sf::IntRect(128, 24, 32, 25));
+	slimeAttack.addFrame(1.f, sf::IntRect(96, 24, 32, 25));
+	slimeAttack.addFrame(1.f, sf::IntRect(64, 24, 32, 25));
+	slimeAttack.addFrame(1.f, sf::IntRect(32, 24, 32, 25));
+	slimeAttack.addFrame(1.f, sf::IntRect(0, 24, 32, 25));
+
+	slimeDie.addFrame(1.f, sf::IntRect(224, 49, 32, 25));
+	slimeDie.addFrame(1.f, sf::IntRect(192, 49, 32, 25));
+	slimeDie.addFrame(1.f, sf::IntRect(160, 49, 32, 25));
+	slimeDie.addFrame(1.f, sf::IntRect(96, 49, 32, 25));
+	slimeDie.addFrame(1.f, sf::IntRect(64, 49, 32, 25));
+
+	slime->animator.addAnimation("idle", slimeIdle, sf::seconds(.8f));
+	slime->animator.addAnimation("attack", slimeAttack, sf::seconds(.8f));
+	slime->animator.addAnimation("die", slimeDie, sf::seconds(.5f));
 
 	EntityModels[EntityID::SLIME] = slime;
 
@@ -376,7 +454,6 @@ void Game::createEntityModels()
 
 	GameEntityModels = &EntityModels;
 
-	std::cout << "Entity models created " << std::endl;
 }
 
 

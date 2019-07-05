@@ -12,7 +12,7 @@ Player::Player() :
 
 	m_activationFlags = 0x0000;
 
-	m_bodyDef.position.Set(100, 0);
+	m_bodyDef.position.Set(100, 200);
 	m_bodyDef.type = b2_dynamicBody;
 
 	

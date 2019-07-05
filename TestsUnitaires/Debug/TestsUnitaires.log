@@ -81,7 +81,7 @@ d:\users\hantisse\source\repos\microprojet\microprojet\sfmlorthogonallayer.hpp(4
               T=unsigned int
           ]
 d:\users\hantisse\source\repos\microprojet\microprojet\game.h(19): warning C4099: 'EntityModel': type name first seen using 'struct' now seen using 'class'
-  d:\users\hantisse\source\repos\microprojet\microprojet\entitymodel.h(24): note: see declaration of 'EntityModel'
+  d:\users\hantisse\source\repos\microprojet\microprojet\entitymodel.h(31): note: see declaration of 'EntityModel'
 d:\users\hantisse\source\repos\microprojet\testsunitaires\test.cpp(163): warning C4002: too many arguments for function-like macro invocation 'EXPECT_TRUE'
 d:\users\hantisse\source\repos\microprojet\testsunitaires\test.cpp(164): warning C4002: too many arguments for function-like macro invocation 'EXPECT_TRUE'
   TestsUnitaires.vcxproj -> D:\Users\Hantisse\source\repos\MicroProjet\Debug\TestsUnitaires.exe

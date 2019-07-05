@@ -14,11 +14,10 @@ MobStatePtr AttackingMobState::handlePlayerPos(Mob& mob)
 {
 	if (!mob.canAttack())
 	{
-		exit(mob);
 		return std::make_unique<SleepingMobState>();
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
 
@@ -60,7 +59,7 @@ void AttackingMobState::enter(Mob& mob)
 
 void AttackingMobState::exit(Mob& mob) 
 {
-	mob.activeAttackBox(true);
+	mob.activeAttackBox(false);
 
 }
 

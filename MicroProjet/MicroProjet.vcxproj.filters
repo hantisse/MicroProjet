@@ -43,12 +43,6 @@
     <ClCompile Include="Mob.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MobFireElemental.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MobSlime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -76,12 +70,6 @@
     <ClCompile Include="MobState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DistanceMob.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ContactMob.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BlockingPlayerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -91,8 +79,21 @@
     <ClCompile Include="ActivationLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HitPlayerState.cpp" />
-    <ClCompile Include="DeadPlayerState.cpp" />
+    <ClCompile Include="HitPlayerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadPlayerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MobAttackBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MobContactAttackBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MobDistanceAttackBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackingMobState.h">
@@ -134,12 +135,6 @@
     <ClInclude Include="Mob.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MobFireElemental.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MobSlime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="StandingPlayerState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -170,12 +165,6 @@
     <ClInclude Include="SleepingMobState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DistanceMob.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ContactMob.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BlockingPlayerState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -185,8 +174,21 @@
     <ClInclude Include="ActivationLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HitPlayerState.h" />
-    <ClInclude Include="DeadPlayerState.h" />
+    <ClInclude Include="DeadPlayerState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HitPlayerState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MobAttackBehaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MobContactAttackBehaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MobDistanceAttackBehaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

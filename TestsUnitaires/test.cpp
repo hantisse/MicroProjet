@@ -3,8 +3,6 @@
 #include "../MicroProjet/Player.h"
 #include "../MicroProjet/PlayerState.h"
 #include "../MicroProjet/Game.h"
-#include "../MicroProjet/MobSlime.h"
-#include "../MicroProjet/MobFireElemental.h"
 #include "SFML/System/Time.hpp"
 
 TEST(MapTest, MapBodies) {
@@ -54,7 +52,7 @@ TEST(PlayerTest, CreatePlayer) {
 
 	EXPECT_EQ(nbFixtures, 6);
 	EXPECT_EQ(player.getJumpPower(), 8);
-	EXPECT_EQ(player.getMaxVel(), 5);
+	EXPECT_EQ(player.getMaxVel(), 7);
 	EXPECT_EQ(nbFixtures, 6);
 	EXPECT_EQ(player.getActivationFlags(), 0x0000);
 
@@ -83,7 +81,7 @@ TEST(MobTest, ContactMobCreate)
 	Game game; //to create models
 
 	b2World world(b2Vec2(0, 9.8f));
-	MobSlime slime(tmx::Vector2f(0,0));
+	Mob slime(SLIME,tmx::Vector2f(0,0));
 
 	slime.createBody(world);
 	b2Body* body = world.GetBodyList();
@@ -99,8 +97,8 @@ TEST(MobTest, ContactMobCreate)
 
 	EXPECT_EQ(slime.getJumpPower(), 0);
 	EXPECT_EQ(slime.getMaxVel(), 1);
-	EXPECT_EQ(slime.getAttackRate(), 3000);
-	EXPECT_EQ(slime.getAttackTiming(), 700);
+	EXPECT_EQ(slime.getAttackBehaviours()[0]->getAttackRate(), 3000);
+	EXPECT_EQ(slime.getAttackBehaviours()[0]->getAttackTiming(), 700);
 	EXPECT_EQ(slime.canMove(), true);
 
 }
@@ -110,7 +108,7 @@ TEST(MobTest, DistanceMobCreate)
 	Game game; //to create models
 
 	b2World world(b2Vec2(0, 9.8f));
-	MobFireElemental fireElem(tmx::Vector2f(0, 0));
+	Mob fireElem(FIRE_ELEMENTAL, tmx::Vector2f(0, 0));
 
 	fireElem.createBody(world);
 	b2Body* body = world.GetBodyList();
@@ -126,8 +124,8 @@ TEST(MobTest, DistanceMobCreate)
 
 	EXPECT_EQ(fireElem.getJumpPower(), 0);
 	EXPECT_EQ(fireElem.getMaxVel(), 0);
-	EXPECT_EQ(fireElem.getAttackRate(), 3000);
-	EXPECT_EQ(fireElem.getAttackTiming(), 0);
+	EXPECT_EQ(fireElem.getAttackBehaviours()[0]->getAttackRate(), 3000);
+	EXPECT_EQ(fireElem.getAttackBehaviours()[0]->getAttackTiming(), 0);
 	EXPECT_EQ(fireElem.canMove(), false);
 
 }
@@ -137,8 +135,10 @@ TEST(MobTest, DistanceMobAttack)
 
 	Game game; //to create models
 	b2World world(b2Vec2(0, 9.8f));
-	MobFireElemental fireElem(tmx::Vector2f(0, 0));
+	Mob fireElem(FIRE_ELEMENTAL,tmx::Vector2f(0, 0));
 	fireElem.createBody(world);
+	fireElem.setCurrentAttackBehaviour(fireElem.getAttackBehaviours()[0].get());
+
 
 	EXPECT_EQ(world.GetBodyCount(), 1);
 	fireElem.attack();
@@ -206,7 +206,7 @@ TEST(LivingEntityTest, TakeDamage)
 	Game game; //to create models
 
 	b2World world(b2Vec2(0, 9.8f));
-	MobSlime slime(tmx::Vector2f(0, 0));
+	Mob slime(SLIME, tmx::Vector2f(0, 0));
 	Player player;
 	
 	slime.createBody(world);
